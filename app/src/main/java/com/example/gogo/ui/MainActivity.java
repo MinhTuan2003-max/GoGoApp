@@ -1,4 +1,4 @@
-package com.example.gogo.activities;
+package com.example.gogo.ui;
 
 import android.os.Bundle;
 
