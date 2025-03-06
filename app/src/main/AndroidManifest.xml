@@ -20,6 +20,10 @@
         </meta-data>
 
         <activity
+            android:name=".ui.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
             android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>

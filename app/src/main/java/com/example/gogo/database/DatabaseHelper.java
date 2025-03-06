@@ -110,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("Email", email);
         values.put("ProfileImageUrl", profileImageUrl);
 
-        long result = db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        long result = db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
         return result != -1; // Trả về true nếu insert thành công, false nếu user đã tồn tại
     }
 
