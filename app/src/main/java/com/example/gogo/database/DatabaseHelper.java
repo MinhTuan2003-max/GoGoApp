@@ -1,9 +1,14 @@
 package com.example.gogo.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.example.gogo.models.User;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -71,4 +76,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public SQLiteDatabase getWritableDatabase() {
         return SQLiteDatabase.openDatabase(DATABASE_PATH, null, SQLiteDatabase.OPEN_READWRITE);
     }
+
+    public User getUserByGoogleId(String googleId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = null;
+
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE GoogleID = ?", new String[]{googleId});
+        if (cursor.moveToFirst()) {
+            user = new User(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("UserID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("GoogleID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("FullName")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("Email")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("ProfileImageUrl")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("Age")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("Gender")),
+                    cursor.getFloat(cursor.getColumnIndexOrThrow("Height")),
+                    cursor.getFloat(cursor.getColumnIndexOrThrow("Weight")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("CreatedAt"))
+            );
+        }
+        cursor.close();
+        db.close();
+        return user;
+    }
+
+    public boolean insertUser(String googleId, String fullName, String email, String profileImageUrl) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("GoogleID", googleId);
+        values.put("FullName", fullName);
+        values.put("Email", email);
+        values.put("ProfileImageUrl", profileImageUrl);
+
+        long result = db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        return result != -1; // Trả về true nếu insert thành công, false nếu user đã tồn tại
+    }
+
 }

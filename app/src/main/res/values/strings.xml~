@@ -51,7 +51,4 @@
     <string name="forgot_password">Quên mật khẩu?</string>
     <string name="signup">Đăng ký</string>
     <string name="app_logo">Logo ứng dụng</string>
-
-    <string name="welcome_message">Xin chào, %1$s!</string>
-    <string name="sign_in_failed">Đăng nhập thất bại</string>
 </resources>
