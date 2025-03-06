@@ -1,8 +1,6 @@
 package com.example.gogo.ui;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,14 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.gogo.R;
 import com.example.gogo.database.DatabaseHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
-
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,11 +30,33 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == RESULT_OK) {
-                    Intent data = result.getData();
+                Log.d(TAG, "Sign-in result received: code=" + result.getResultCode() + ", data=" + result.getData());
+                Intent data = result.getData();
+
+                if (result.getResultCode() == RESULT_OK && data != null) {
+                    Log.d(TAG, "Sign-in successful, processing result");
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                    handleSignInResult(task);
+                } else {
+                    Log.e(TAG, "Sign-in was canceled or failed: code=" + result.getResultCode() + ", data=" + (data != null ? data.toString() : "null"));
                     if (data != null) {
-                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                        handleSignInResult(task);
+                        // Kiểm tra extras trong Intent
+                        Bundle extras = data.getExtras();
+                        if (extras != null) {
+                            Log.d(TAG, "Extras in Intent: " + extras.keySet());
+                            for (String key : extras.keySet()) {
+                                Log.d(TAG, "Extra [" + key + "]: " + extras.get(key));
+                            }
+                            // Thử xử lý Intent ngay cả khi không phải RESULT_OK
+                            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                            handleSignInResult(task);
+                        } else {
+                            Log.d(TAG, "No extras found in Intent");
+                            Toast.makeText(MainActivity.this, "Đăng nhập bị hủy", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Log.d(TAG, "Result data is null");
+                        Toast.makeText(MainActivity.this, "Đăng nhập thất bại: Không có dữ liệu trả về", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -50,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
         // Khởi tạo DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
+        // Kiểm tra Google Play Services
+        if (!checkGooglePlayServices()) {
+            finish();
+            return;
+        }
+
         // Cấu hình Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -58,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // Gán sự kiện cho nút đăng nhập
         MaterialButton googleSignInButton = findViewById(R.id.googleSignInButton);
         googleSignInButton.setOnClickListener(v -> signIn());
 
@@ -65,57 +92,88 @@ public class MainActivity extends AppCompatActivity {
         checkPreviousSignIn();
     }
 
+    private boolean checkGooglePlayServices() {
+        GoogleApiAvailability googleApi = GoogleApiAvailability.getInstance();
+        int resultCode = googleApi.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            Log.e(TAG, "Google Play Services unavailable: " + resultCode);
+            if (googleApi.isUserResolvableError(resultCode)) {
+                googleApi.getErrorDialog(this, resultCode, 9000).show();
+            } else {
+                Toast.makeText(this, "Thiết bị không hỗ trợ Google Play Services", Toast.LENGTH_LONG).show();
+            }
+            return false;
+        }
+        Log.d(TAG, "Google Play Services is available");
+        return true;
+    }
+
     private void checkPreviousSignIn() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
+            Log.d(TAG, "Previous sign-in detected: " + account.getEmail());
             navigateToHomeActivity();
+        } else {
+            Log.d(TAG, "No previous sign-in detected");
         }
     }
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        Log.d(TAG, "Launching sign-in intent: " + signInIntent);
         signInLauncher.launch(signInIntent);
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            if (account != null) {
-                // Lưu thông tin người dùng vào database
-                saveUserToDatabase(account);
+            Log.d(TAG, "Sign-in successful, account: " + (account != null ? account.getEmail() : "null"));
 
-                // Chuyển sang HomeActivity
+            if (account != null) {
+                saveUserToDatabase(account);
                 navigateToHomeActivity();
+            } else {
+                Log.e(TAG, "Account is null after successful sign-in");
+                Toast.makeText(MainActivity.this, "Đăng nhập không thành công", Toast.LENGTH_SHORT).show();
             }
         } catch (ApiException e) {
-            Log.w(TAG, "Sign-in failed: " + e.getStatusCode());
-            Toast.makeText(MainActivity.this, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "Sign-in failed: code=" + e.getStatusCode() + ", message=" + e.getMessage());
+            String errorMessage;
+            switch (e.getStatusCode()) {
+                case 12501:
+                    errorMessage = "Đăng nhập bị hủy bởi người dùng";
+                    break;
+                case 12500:
+                    errorMessage = "Lỗi đăng nhập không xác định";
+                    break;
+                case 10:
+                    errorMessage = "Lỗi cấu hình nhà phát triển (kiểm tra Google Cloud Console)";
+                    break;
+                default:
+                    errorMessage = "Đăng nhập thất bại: " + e.getStatusMessage();
+            }
+            Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected error during sign-in: ", e);
+            Toast.makeText(MainActivity.this, "Lỗi không xác định khi đăng nhập", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void saveUserToDatabase(GoogleSignInAccount account) {
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        Log.d(TAG, "Attempting to save user: " + account.getId());
+        boolean success = databaseHelper.insertUser(
+                account.getId(),
+                account.getDisplayName(),
+                account.getEmail(),
+                account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null
+        );
 
-        try {
-            ContentValues values = new ContentValues();
-            values.put("GoogleId", account.getId());
-            values.put("FullName", account.getDisplayName());
-            values.put("Email", account.getEmail());
-            values.put("ProfileImageUrl", account.getPhotoUrl() != null
-                    ? account.getPhotoUrl().toString()
-                    : null);
-            values.put("CreatedAt", new Date().getTime());
+        Log.d(TAG, "User save result: " + (success ? "success" : "failure"));
 
-            long result = db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
-
-            if (result == -1) {
-                Toast.makeText(MainActivity.this, "Lỗi lưu thông tin người dùng", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Lỗi khi lưu người dùng: " + e.getMessage());
+        if (!success) {
             Toast.makeText(MainActivity.this, "Lỗi lưu thông tin người dùng", Toast.LENGTH_SHORT).show();
-        } finally {
-            db.close();
+        } else {
+            Toast.makeText(MainActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -123,5 +181,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (databaseHelper != null) {
+            databaseHelper.close();
+        }
     }
 }

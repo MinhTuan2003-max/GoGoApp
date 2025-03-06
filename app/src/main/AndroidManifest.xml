@@ -16,7 +16,7 @@
 
         <meta-data
             android:name="com.google.android.gms.auth.api.signin"
-            android:value="YOUR_CLIENT_ID">
+            android:value="587504441172-pg3i1k9lcu6uhahff32gncs8dbnqo1d4.apps.googleusercontent.com">
         </meta-data>
 
         <activity

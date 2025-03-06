@@ -17,7 +17,7 @@ import java.io.OutputStream;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DatabaseHelper";
-    private static final String DATABASE_NAME = "gogoapp.db";
+    private static final String DATABASE_NAME = "gogoapp.sqlite";
     private static final int DATABASE_VERSION = 1;
     private static String DATABASE_PATH;
 
