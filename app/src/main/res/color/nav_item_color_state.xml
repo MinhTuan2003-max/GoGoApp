@@ -2,5 +2,5 @@
     <!-- Màu khi được chọn -->
     <item android:color="#627F53" android:state_checked="true" />
     <!-- Màu khi không được chọn -->
-    <item android:color="#D3DDBB" />
+    <item android:color="#FFFFFF" />
 </selector>
