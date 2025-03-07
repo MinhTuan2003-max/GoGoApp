@@ -161,24 +161,39 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveUserToDatabase(GoogleSignInAccount account) {
         Log.d(TAG, "Attempting to save user: " + account.getId());
-        boolean success = databaseHelper.insertUser(
-                account.getId(),
-                account.getDisplayName(),
-                account.getEmail(),
-                account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null
-        );
 
-        Log.d(TAG, "User save result: " + (success ? "success" : "failure"));
-
-        if (!success) {
-            Toast.makeText(MainActivity.this, "Lỗi lưu thông tin người dùng", Toast.LENGTH_SHORT).show();
+        // Kiểm tra xem user đã tồn tại chưa
+        if (databaseHelper.isUserExists(account.getId())) {
+            Log.d(TAG, "User already exists with GoogleID: " + account.getId());
+            Toast.makeText(MainActivity.this, "Chào mừng trở lại", Toast.LENGTH_SHORT).show();
+            // Chuyển sang HomeActivity hoặc load dữ liệu hiện có
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
         } else {
-            Toast.makeText(MainActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+            // Nếu chưa tồn tại, insert mới
+            boolean success = databaseHelper.insertUser(
+                    account.getId(),
+                    account.getDisplayName(),
+                    account.getEmail(),
+                    account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null
+            );
+
+            Log.d(TAG, "User save result: " + (success ? "success" : "failure"));
+
+            if (success) {
+                Toast.makeText(MainActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(MainActivity.this, "Lỗi lưu thông tin người dùng", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     private void navigateToHomeActivity() {
-        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
         startActivity(intent);
         finish();
     }

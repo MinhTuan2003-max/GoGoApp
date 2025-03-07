@@ -77,7 +77,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return SQLiteDatabase.openDatabase(DATABASE_PATH, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
-    public User getUserByGoogleId(String googleId) {
+    public boolean isUserExists(String googleId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT GoogleID FROM Users WHERE GoogleID = ?", new String[]{googleId});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return exists;
+    }
+
+    public synchronized boolean insertUser(String googleId, String fullName, String email, String profileImageUrl) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("GoogleID", googleId);
+        values.put("FullName", fullName);
+        values.put("Email", email);
+        values.put("ProfileImageUrl", profileImageUrl);
+
+        long result = db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        db.close();
+        return result != -1;
+    }
+
+    public synchronized User getUserByGoogleId(String googleId) {
         SQLiteDatabase db = this.getReadableDatabase();
         User user = null;
 
@@ -97,21 +120,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             );
         }
         cursor.close();
-        db.close();
         return user;
     }
 
-    public boolean insertUser(String googleId, String fullName, String email, String profileImageUrl) {
+    public synchronized boolean updateUserData(String googleId, int age, String gender, float height, float weight) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put("GoogleID", googleId);
-        values.put("FullName", fullName);
-        values.put("Email", email);
-        values.put("ProfileImageUrl", profileImageUrl);
+        values.put("Age", age);
+        values.put("Gender", gender);
+        values.put("Height", height);
+        values.put("Weight", weight);
 
-        long result = db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        return result != -1; // Trả về true nếu insert thành công, false nếu user đã tồn tại
+        int rowsAffected = db.update("Users", values, "GoogleID = ?", new String[]{googleId});
+        return rowsAffected > 0;
     }
 
 }
