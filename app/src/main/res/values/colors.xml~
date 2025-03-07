@@ -23,7 +23,7 @@
     <color name="purple_700">#3700B3</color>
     <color name="teal_200">#03DAC5</color>
     <color name="teal_700">#018786</color>
-    <color name="text_get_started">#E3F2FD</color>
+
     <color name="primary">#4CAF50</color>
     <color name="background_light">#F5F5F5</color>
 </resources>
