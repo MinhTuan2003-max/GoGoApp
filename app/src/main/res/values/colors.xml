@@ -26,4 +26,9 @@
 
     <color name="primary">#4CAF50</color>
     <color name="background_light">#F5F5F5</color>
+
+    <color name="nutrient_text_get_started">#215D49</color>
+    <color name="nutrient_select_light">#677C69</color>
+    <color name="nutrient_select_dark">#1A3637</color>
+
 </resources>

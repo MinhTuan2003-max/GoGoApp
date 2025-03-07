@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Khi nhấn button -->
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/nutrient_select_dark" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+
+    <!-- Trạng thái bình thường -->
+    <item>
+        <shape>
+            <solid android:color="@color/nutrient_select_light" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+</selector>
