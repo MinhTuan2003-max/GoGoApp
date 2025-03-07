@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Nút Back giống như trong activity_wake_up.xml -->
+        <!-- Nút Back -->
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"

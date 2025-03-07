@@ -21,6 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.SleepInputActivity" />
+        <activity android:name=".ui.SleepSuggestionActivity" />
+        <activity android:name=".ui.SleepHistoryActivity" />
+        <activity android:name=".ui.WakeUpInputActivity" />
+
     </application>
 
 </manifest>
