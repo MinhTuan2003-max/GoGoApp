@@ -1,6 +1,7 @@
 package com.example.gogo.ui;
 
 import android.os.Bundle;
+import android.widget.ImageButton;  // Thêm import này
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.gogo.R;
@@ -11,6 +12,12 @@ public class SleepSuggestionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_sleep);
+
+        // Khai báo ImageButton
+        ImageButton btnBack = findViewById(R.id.btn_back);
+
+        // Thêm sự kiện click cho nút back
+        btnBack.setOnClickListener(v -> finish());  // finish() sẽ đóng activity hiện tại và quay lại màn hình trước
 
         String wakeUpTime = getIntent().getStringExtra("wake_up_time");
         if (wakeUpTime == null) wakeUpTime = "06:00"; // Giá trị mặc định nếu không nhận được
