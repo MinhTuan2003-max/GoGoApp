@@ -25,7 +25,7 @@ public class NutrientStartedActivity extends AppCompatActivity {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_nutrients_select);
+            setContentView(R.layout.activity_nutrients_start);
 //            // Tham chiếu đến BottomNavigationView
 //            BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 //
