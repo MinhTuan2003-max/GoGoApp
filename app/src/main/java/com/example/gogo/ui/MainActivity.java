@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gogo.R;
+import com.example.gogo.database.AccountDAO;
 import com.example.gogo.database.DatabaseHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "GoogleSignIn";
     private GoogleSignInClient mGoogleSignInClient;
     private DatabaseHelper databaseHelper;
+    private AccountDAO accountDAO;
 
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Khởi tạo DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
+        accountDAO = new AccountDAO(databaseHelper);
 
         // Kiểm tra Google Play Services
         if (!checkGooglePlayServices()) {
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Attempting to save user: " + account.getId());
 
         // Kiểm tra xem user đã tồn tại chưa
-        if (databaseHelper.isUserExists(account.getId())) {
+        if (accountDAO.isUserExists(account.getId())) {
             Log.d(TAG, "User already exists with GoogleID: " + account.getId());
             Toast.makeText(MainActivity.this, "Chào mừng trở lại", Toast.LENGTH_SHORT).show();
             // Chuyển sang HomeActivity hoặc load dữ liệu hiện có
@@ -172,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             // Nếu chưa tồn tại, insert mới
-            boolean success = databaseHelper.insertUser(
+            boolean success = accountDAO.insertUser(
                     account.getId(),
                     account.getDisplayName(),
                     account.getEmail(),
@@ -193,7 +196,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateToHomeActivity() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
+        if (account != null) {
+            intent.putExtra("GOOGLE_ID", account.getId()); // Pass Google ID explicitly
+        }
         startActivity(intent);
         finish();
     }

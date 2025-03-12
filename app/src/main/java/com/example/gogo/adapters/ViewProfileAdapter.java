@@ -1,6 +1,8 @@
 package com.example.gogo.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,16 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.gogo.R;
 import com.example.gogo.models.User;
-import com.example.gogo.respository.HealthRepository;
+import com.example.gogo.ui.UpdateProfileInfoActivity;
 import com.example.gogo.ui.ViewProfileActivity;
 import com.example.gogo.utils.HealthUtils;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.example.gogo.respository.HealthRepository;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
@@ -91,7 +94,11 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return 4;
+        return 4; // 4 phần: Profile Header, Body Measurements, Account Settings, Privacy
+    }
+
+    public void refreshData() {
+        notifyDataSetChanged(); // Làm mới toàn bộ dữ liệu
     }
 
     class ProfileHeaderViewHolder extends RecyclerView.ViewHolder {
@@ -114,22 +121,18 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         void bind() {
             User user = healthRepository.getUserData(googleId);
             if (user != null) {
-                textFullName.setText(user.getFullName());
+                textFullName.setText(user.getFullName() != null ? user.getFullName() : "N/A");
                 textAge.setText("Tuổi: " + (user.getAge() > 0 ? user.getAge() : "N/A"));
                 textGender.setText("Giới tính: " + (user.getGender() != null ? user.getGender() : "N/A"));
                 String createdAt = user.getCreatedAt();
                 if (createdAt != null && !createdAt.isEmpty()) {
                     try {
-                        // Parse the existing date (assuming it's in "yyyy-MM-dd HH:mm:ss" format)
                         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                         Date date = inputFormat.parse(createdAt);
-
-                        // Format to "dd/MM/yyyy" with Vietnamese locale
                         SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("vi", "VN"));
                         String formattedDate = outputFormat.format(date);
                         textMemberSince.setText(formattedDate);
                     } catch (ParseException e) {
-                        // If parsing fails, fallback to raw string or "N/A"
                         textMemberSince.setText("N/A");
                         e.printStackTrace();
                     }
@@ -137,6 +140,11 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     textMemberSince.setText("N/A");
                 }
                 Glide.with(context).load(user.getProfileImageUrl()).into(imageProfile);
+            } else {
+                textFullName.setText("N/A");
+                textAge.setText("Tuổi: N/A");
+                textGender.setText("Giới tính: N/A");
+                textMemberSince.setText("N/A");
             }
         }
     }
@@ -163,10 +171,22 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             textBMR = itemView.findViewById(R.id.textBMR);
             textBMRCategory = itemView.findViewById(R.id.textBMRCategory);
             buttonUpdateMeasurements = itemView.findViewById(R.id.buttonUpdateMeasurements);
+
+            buttonUpdateMeasurements.setOnClickListener(v -> {
+                Intent intent = new Intent(context, UpdateProfileInfoActivity.class);
+                intent.putExtra("GOOGLE_ID", googleId);
+                if (context instanceof AppCompatActivity) {
+                    Log.d("ViewProfile", "Starting UpdateProfileInfoActivity with request code " + ViewProfileActivity.REQUEST_UPDATE_PROFILE);
+                    ((AppCompatActivity) context).startActivityForResult(intent, ViewProfileActivity.REQUEST_UPDATE_PROFILE);
+                } else {
+                    Log.w("ViewProfile", "Context is not an AppCompatActivity, cannot start activity for result");
+                }
+            });
         }
 
         void bind() {
             User user = healthRepository.getUserData(googleId);
+            Log.d("ViewProfile", "Binding BodyMeasurements with user: " + (user != null ? user.toString() : "null"));
             if (user != null) {
                 float height = user.getHeight();
                 float weight = user.getWeight();
@@ -182,7 +202,6 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     String bmiCategory = HealthUtils.getBMICategory(bmi);
                     textBMICategory.setText(bmiCategory);
 
-                    // Set BMI card background color based on category
                     int bmiColor;
                     switch (bmiCategory) {
                         case "Thiếu cân":
@@ -217,13 +236,12 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     float tdee = HealthUtils.calculateTDEE(bmr, "moderate");
                     textBMRCategory.setText(String.format("TDEE: %.0f kcal", tdee));
 
-                    // Set BMR/TDEE card background color based on TDEE range
                     int tdeeColor;
-                    if (tdee < 1800) { // Low energy needs
+                    if (tdee < 1800) {
                         tdeeColor = ContextCompat.getColor(context, R.color.tdee_low);
-                    } else if (tdee <= 2500) { // Normal range
+                    } else if (tdee <= 2500) {
                         tdeeColor = ContextCompat.getColor(context, R.color.tdee_normal);
-                    } else { // High energy needs
+                    } else {
                         tdeeColor = ContextCompat.getColor(context, R.color.tdee_high);
                     }
                     cardBMR.setCardBackgroundColor(tdeeColor);
@@ -232,15 +250,6 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     textBMRCategory.setText("Chưa có dữ liệu");
                     cardBMR.setCardBackgroundColor(ContextCompat.getColor(context, R.color.card_background));
                 }
-
-                buttonUpdateMeasurements.setOnClickListener(v -> {
-                    if (height > 0 && weight > 0 && age > 0 && gender != null) {
-                        float bmi = HealthUtils.calculateBMI(height, weight);
-                        float bmr = HealthUtils.calculateBMR(height, weight, age, gender);
-                        healthRepository.saveHealthIndex(googleId);
-                        bind();
-                    }
-                });
             } else {
                 textHeight.setText("N/A");
                 textWeight.setText("N/A");
@@ -279,13 +288,14 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
         }
 
-
-
         void bind() {
             User user = healthRepository.getUserData(googleId);
             if (user != null) {
-                textEmail.setText(user.getEmail());
+                textEmail.setText(user.getEmail() != null ? user.getEmail() : "N/A");
                 textAuthProvider.setText("Google");
+            } else {
+                textEmail.setText("N/A");
+                textAuthProvider.setText("N/A");
             }
         }
     }
@@ -302,5 +312,4 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             // Privacy logic if needed
         }
     }
-
 }

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gogo.R;
+import com.example.gogo.database.AccountDAO;
 import com.example.gogo.database.DatabaseHelper;
 import com.example.gogo.models.User;
 import com.example.gogo.ui.HomeActivity;
@@ -26,11 +27,13 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
     private Context context;
     private User user;
     private DatabaseHelper dbHelper;
+    private AccountDAO accountDAO;
 
     public UserInfoAdapter(Context context, User user) {
         this.context = context;
         this.user = user;
         this.dbHelper = new DatabaseHelper(context);
+
     }
 
     @NonNull
@@ -96,7 +99,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
             int age = 2025 - holder.numberPickerYear.getValue();
 
             // Update database
-            boolean success = dbHelper.updateUserData(user.getGoogleId(), age, gender, height, weight);
+            boolean success = accountDAO.updateUserData(user.getGoogleId(), age, gender, height, weight);
 
             if (success) {
                 // Update user object

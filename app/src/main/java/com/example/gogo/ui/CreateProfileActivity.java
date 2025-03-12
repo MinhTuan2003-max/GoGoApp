@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gogo.R;
 import com.example.gogo.adapters.UserInfoAdapter;
+import com.example.gogo.database.AccountDAO;
 import com.example.gogo.database.DatabaseHelper;
 import com.example.gogo.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,6 +29,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private GoogleSignInClient mGoogleSignInClient;
     private DatabaseHelper dbHelper;
+    private AccountDAO accountDAO;
     private RecyclerView recyclerView;
     private UserInfoAdapter adapter;
     private String googleId;
@@ -37,7 +39,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
+        // Initialize DatabaseHelper and AccountDAO
         dbHelper = new DatabaseHelper(this);
+        accountDAO = new AccountDAO(dbHelper); // Fix: Initialize accountDAO here
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -47,15 +51,15 @@ public class CreateProfileActivity extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             googleId = account.getId();
-            User user = dbHelper.getUserByGoogleId(googleId);
+            User user = accountDAO.getUserByGoogleId(googleId);
             if (user != null && isAdditionalInfoFilled(user)) {
-                // Thông tin bổ sung đã đầy đủ, chuyển thẳng đến HomeActivity
+                // Additional info is complete, go to HomeActivity
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
                 finish();
                 return;
             }
-            // Nếu chưa đầy đủ hoặc user mới, lưu và thiết lập RecyclerView
+            // If info is incomplete or user is new, save and set up RecyclerView
             saveUserToDatabase(account);
             setupRecyclerView(account);
         } else {
@@ -89,13 +93,13 @@ public class CreateProfileActivity extends AppCompatActivity {
         Log.d(TAG, "Attempting to save user: " + account.getId());
         googleId = account.getId();
 
-        User user = dbHelper.getUserByGoogleId(googleId);
+        User user = accountDAO.getUserByGoogleId(googleId);
         if (user == null) {
-            // Nếu chưa tồn tại, insert mới
+            // If user doesn’t exist, insert new
             user = new User(0, account.getId(), account.getDisplayName(), account.getEmail(),
                     account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null,
                     0, null, 0.0f, 0.0f, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            boolean success = dbHelper.insertUser(
+            boolean success = accountDAO.insertUser(
                     user.getGoogleId(),
                     user.getFullName(),
                     user.getEmail(),
@@ -117,7 +121,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        User user = dbHelper.getUserByGoogleId(account.getId());
+        User user = accountDAO.getUserByGoogleId(account.getId());
         if (user == null) {
             user = new User(0, account.getId(), account.getDisplayName(), account.getEmail(),
                     account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null,
@@ -131,5 +135,13 @@ public class CreateProfileActivity extends AppCompatActivity {
     private boolean isAdditionalInfoFilled(User user) {
         return user.getAge() > 0 && user.getGender() != null && user.getGender().trim().length() > 0 &&
                 user.getHeight() > 0.0f && user.getWeight() > 0.0f;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
     }
 }

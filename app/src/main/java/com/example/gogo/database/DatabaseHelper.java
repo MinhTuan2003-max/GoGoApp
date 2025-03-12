@@ -1,13 +1,9 @@
 package com.example.gogo.database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import com.example.gogo.models.User;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +16,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "gogoapp.sqlite";
     private static final int DATABASE_VERSION = 1;
     private static String DATABASE_PATH;
-
     private final Context context;
 
     public DatabaseHelper(Context context) {
@@ -67,95 +62,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "onUpgrade called, but no changes needed.");
     }
 
-    @Override
-    public SQLiteDatabase getReadableDatabase() {
-        return SQLiteDatabase.openDatabase(DATABASE_PATH, null, SQLiteDatabase.OPEN_READONLY);
+    public SQLiteDatabase getDatabase(boolean writable) {
+        return SQLiteDatabase.openDatabase(DATABASE_PATH, null,
+                writable ? SQLiteDatabase.OPEN_READWRITE : SQLiteDatabase.OPEN_READONLY);
     }
-
-    @Override
-    public SQLiteDatabase getWritableDatabase() {
-        return SQLiteDatabase.openDatabase(DATABASE_PATH, null, SQLiteDatabase.OPEN_READWRITE);
-    }
-
-    public boolean isUserExists(String googleId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT GoogleID FROM Users WHERE GoogleID = ?", new String[]{googleId});
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
-        db.close();
-        return exists;
-    }
-
-    public synchronized boolean insertUser(String googleId, String fullName, String email, String profileImageUrl) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("GoogleID", googleId);
-        values.put("FullName", fullName);
-        values.put("Email", email);
-        values.put("ProfileImageUrl", profileImageUrl);
-
-        long result = db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        db.close();
-        return result != -1;
-    }
-
-    public synchronized User getUserByGoogleId(String googleId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        User user = null;
-
-        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE GoogleID = ?", new String[]{googleId});
-        if (cursor.moveToFirst()) {
-            user = new User(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("UserID")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("GoogleID")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("FullName")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("Email")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("ProfileImageUrl")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("Age")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("Gender")),
-                    cursor.getFloat(cursor.getColumnIndexOrThrow("Height")),
-                    cursor.getFloat(cursor.getColumnIndexOrThrow("Weight")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("CreatedAt"))
-            );
-        }
-        cursor.close();
-        db.close();
-        return user;
-    }
-
-    public synchronized boolean updateUserData(String googleId, int age, String gender, float height, float weight) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("Age", age);
-        values.put("Gender", gender);
-        values.put("Height", height);
-        values.put("Weight", weight);
-
-        int rowsAffected = db.update("Users", values, "GoogleID = ?", new String[]{googleId});
-        db.close();
-        return rowsAffected > 0;
-    }
-
-    // Insert health index data
-    public synchronized boolean insertHealthIndex(int userId, float bmi, float bmr) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("UserID", userId);
-        values.put("BMI", bmi);
-        values.put("BMR", bmr);
-
-        long result = db.insert("HealthIndex", null, values);
-        db.close();
-        return result != -1;
-    }
-
-    // Get latest health index data for a user
-    public synchronized Cursor getLatestHealthIndex(int userId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM HealthIndex WHERE UserID = ? ORDER BY RecordedAt DESC LIMIT 1";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
-        // Do not close db here, let the caller handle it
-        return cursor;
-    }
-
 }

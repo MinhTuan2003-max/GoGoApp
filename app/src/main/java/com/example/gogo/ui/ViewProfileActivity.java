@@ -2,6 +2,7 @@ package com.example.gogo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,13 +19,16 @@ import com.google.android.material.appbar.MaterialToolbar;
 public class ViewProfileActivity extends AppCompatActivity {
 
     private GoogleSignInClient googleSignInClient;
+    private ViewProfileAdapter adapter;
+    private RecyclerView recyclerView;
+    private String googleId;
+    public static final int REQUEST_UPDATE_PROFILE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_user);
 
-        // Initialize GoogleSignInClient
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestProfile()
@@ -41,19 +45,35 @@ public class ViewProfileActivity extends AppCompatActivity {
             finish();
         });
 
+        recyclerView = findViewById(R.id.recyclerViewProfile);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            String googleId = account.getId();
-            setupRecyclerView(googleId);
+            googleId = account.getId();
+            setupRecyclerView();
         } else {
             finish();
         }
     }
 
-    private void setupRecyclerView(String googleId) {
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewProfile);
+    private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ViewProfileAdapter(this, googleId));
+        adapter = new ViewProfileAdapter(this, googleId);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("ViewProfile", "onActivityResult called with requestCode=" + requestCode + ", resultCode=" + resultCode);
+        if (requestCode == REQUEST_UPDATE_PROFILE && resultCode == RESULT_OK) {
+            Log.d("ViewProfile", "Update successful, refreshing data");
+            if (adapter != null) {
+                adapter.refreshData();
+            } else {
+                Log.w("ViewProfile", "Adapter is null, reinitializing");
+                setupRecyclerView();
+            }
+        }
     }
 
     public void logout() {

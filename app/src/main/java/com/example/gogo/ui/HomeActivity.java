@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gogo.R;
+import com.example.gogo.database.AccountDAO;
 import com.example.gogo.database.DatabaseHelper;
 import com.example.gogo.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,6 +28,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button continueButton;
     private Button logoutButton;
     private DatabaseHelper databaseHelper;
+    private AccountDAO accountDAO;
     private GoogleSignInClient googleSignInClient;
 
     @Override
@@ -42,7 +44,9 @@ public class HomeActivity extends AppCompatActivity {
         weightTextView = findViewById(R.id.weightTextView);
         continueButton = findViewById(R.id.continueButton);
         logoutButton = findViewById(R.id.logoutButton);
+
         databaseHelper = new DatabaseHelper(this);
+        accountDAO = new AccountDAO(databaseHelper);
 
         googleSignInClient = GoogleSignIn.getClient(this, new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build());
 
@@ -58,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
     private void loadUserData() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            User user = databaseHelper.getUserByGoogleId(account.getId());
+            User user = accountDAO.getUserByGoogleId(account.getId());
             if (user != null) {
                 welcomeTextView.setText("Welcome, " + user.getFullName());
                 ageTextView.setText("Age: " + (user.getAge() > 0 ? user.getAge() : "N/A"));
