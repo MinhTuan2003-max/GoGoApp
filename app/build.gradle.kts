@@ -29,6 +29,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -42,6 +45,9 @@ dependencies {
 
     // Glide cho ảnh (không dùng kapt)
     implementation("com.github.bumptech.glide:glide:4.12.0")
+    implementation(libs.annotation)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
     // Unit test

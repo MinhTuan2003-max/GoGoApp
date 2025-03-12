@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         loadUserData();
 
         continueButton.setOnClickListener(view -> {
-            startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+            startActivity(new Intent(HomeActivity.this, ViewProfileActivity.class));
         });
 
         logoutButton.setOnClickListener(view -> logout());

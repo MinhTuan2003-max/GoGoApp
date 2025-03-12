@@ -88,7 +88,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public synchronized boolean insertUser(String googleId, String fullName, String email, String profileImageUrl) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put("GoogleID", googleId);
         values.put("FullName", fullName);
@@ -120,12 +119,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             );
         }
         cursor.close();
+        db.close();
         return user;
     }
 
     public synchronized boolean updateUserData(String googleId, int age, String gender, float height, float weight) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put("Age", age);
         values.put("Gender", gender);
@@ -133,7 +132,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("Weight", weight);
 
         int rowsAffected = db.update("Users", values, "GoogleID = ?", new String[]{googleId});
+        db.close();
         return rowsAffected > 0;
+    }
+
+    // Insert health index data
+    public synchronized boolean insertHealthIndex(int userId, float bmi, float bmr) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("UserID", userId);
+        values.put("BMI", bmi);
+        values.put("BMR", bmr);
+
+        long result = db.insert("HealthIndex", null, values);
+        db.close();
+        return result != -1;
+    }
+
+    // Get latest health index data for a user
+    public synchronized Cursor getLatestHealthIndex(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM HealthIndex WHERE UserID = ? ORDER BY RecordedAt DESC LIMIT 1";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+        // Do not close db here, let the caller handle it
+        return cursor;
     }
 
 }

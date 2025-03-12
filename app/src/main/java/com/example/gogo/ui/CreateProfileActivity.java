@@ -23,7 +23,7 @@ import com.google.android.gms.tasks.Task;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ProfileActivity extends AppCompatActivity {
+public class CreateProfileActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "ProfileActivity";
     private GoogleSignInClient mGoogleSignInClient;

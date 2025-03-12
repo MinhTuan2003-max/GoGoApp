@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateToHomeActivity() {
-        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
         startActivity(intent);
         finish();
     }
