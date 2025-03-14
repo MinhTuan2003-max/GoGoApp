@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ViewProfileActivity extends AppCompatActivity {
 
@@ -22,12 +23,15 @@ public class ViewProfileActivity extends AppCompatActivity {
     private ViewProfileAdapter adapter;
     private RecyclerView recyclerView;
     private String googleId;
+    private BottomNavigationView bottomNavigationView;
     public static final int REQUEST_UPDATE_PROFILE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_user);
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -53,6 +57,8 @@ public class ViewProfileActivity extends AppCompatActivity {
         } else {
             finish();
         }
+
+        setupBottomNavigation();
     }
 
     private void setupRecyclerView() {
@@ -74,6 +80,24 @@ public class ViewProfileActivity extends AppCompatActivity {
                 setupRecyclerView();
             }
         }
+    }
+
+    private void setupBottomNavigation() {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(ViewProfileActivity.this, HomeActivity.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                // Đã ở ViewProfileActivity, không cần làm gì
+                return true;
+            }
+            return false;
+        });
+
+        // Đánh dấu mục hiện tại
+        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
     }
 
     public void logout() {

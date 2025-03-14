@@ -26,6 +26,11 @@ public class UpdateProfileInfoAdapter extends RecyclerView.Adapter<UpdateProfile
     private Context context;
     private String googleId;
     private HealthRepository healthRepository;
+    private String originalFullName;
+    private float originalHeight;
+    private float originalWeight;
+    private int originalDay, originalMonth, originalYear;
+    private String originalGender;
 
     public UpdateProfileInfoAdapter(Context context, String googleId, HealthRepository healthRepository) {
         this.context = context;
@@ -50,12 +55,12 @@ public class UpdateProfileInfoAdapter extends RecyclerView.Adapter<UpdateProfile
         return 1; // Chỉ có 1 item
     }
 
+
     class UpdateProfileInfoViewHolder extends RecyclerView.ViewHolder {
         TextInputEditText editName, editHeight, editWeight;
         NumberPicker dayPicker, monthPicker, yearPicker; // Sửa thành NumberPicker
         MaterialAutoCompleteTextView dropdownGender;
         MaterialButton buttonSave;
-
         UpdateProfileInfoViewHolder(@NonNull View itemView) {
             super(itemView);
             editName = itemView.findViewById(R.id.editName);
@@ -86,22 +91,62 @@ public class UpdateProfileInfoAdapter extends RecyclerView.Adapter<UpdateProfile
         void bind() {
             User user = healthRepository.getUserData(googleId);
             if (user != null) {
-                editName.setText(user.getFullName());
-                editHeight.setText(String.valueOf(user.getHeight()));
-                editWeight.setText(String.valueOf(user.getWeight()));
-                dropdownGender.setText(user.getGender() != null ? user.getGender() : "Nam", false); // Default "Nam"
-                // Giả sử tuổi được tính từ ngày sinh
+                originalFullName = user.getFullName();
+                originalHeight = user.getHeight();
+                originalWeight = user.getWeight();
+                originalGender = user.getGender() != null ? user.getGender() : "Nam";
+
                 Calendar today = Calendar.getInstance();
                 int age = user.getAge();
                 int year = today.get(Calendar.YEAR) - age;
-                dayPicker.setValue(today.get(Calendar.DAY_OF_MONTH));
-                monthPicker.setValue(today.get(Calendar.MONTH) + 1);
-                yearPicker.setValue(year);
+                originalYear = year;
+                originalDay = today.get(Calendar.DAY_OF_MONTH);
+                originalMonth = today.get(Calendar.MONTH) + 1;
+
+                editName.setText(originalFullName);
+                editHeight.setText(String.valueOf(originalHeight));
+                editWeight.setText(String.valueOf(originalWeight));
+                dropdownGender.setText(originalGender, false);
+                dayPicker.setValue(originalDay);
+                monthPicker.setValue(originalMonth);
+                yearPicker.setValue(originalYear);
             }
         }
+
+    }
+
+    private boolean isDataChanged(UpdateProfileInfoViewHolder holder) {
+        String newFullName = holder.editName.getText().toString();
+        float newHeight, newWeight;
+
+        try {
+            newHeight = Float.parseFloat(holder.editHeight.getText().toString());
+            newWeight = Float.parseFloat(holder.editWeight.getText().toString());
+        } catch (NumberFormatException e) {
+            return false; // Nếu người dùng nhập sai định dạng, không cho phép lưu
+        }
+
+        int newDay = holder.dayPicker.getValue();
+        int newMonth = holder.monthPicker.getValue();
+        int newYear = holder.yearPicker.getValue();
+        String newGender = holder.dropdownGender.getText().toString();
+
+        return !newFullName.equals(originalFullName) ||
+                newHeight != originalHeight ||
+                newWeight != originalWeight ||
+                newDay != originalDay ||
+                newMonth != originalMonth ||
+                newYear != originalYear ||
+                !newGender.equals(originalGender);
     }
 
     private void saveUserData(UpdateProfileInfoViewHolder holder) {
+
+        if (!isDataChanged(holder)) {
+            Toast.makeText(context, "Bạn chưa cập nhật thông tin. Vui lòng chỉnh sửa trước khi lưu!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
             String fullName = holder.editName.getText().toString();
             float height = Float.parseFloat(holder.editHeight.getText().toString());
