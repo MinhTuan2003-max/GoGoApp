@@ -152,6 +152,9 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.nav_home) {
                 return true;
+            } else if (itemId == R.id.nav_settings) {
+                startActivity(new Intent(HomeActivity.this, SettingActivity.class));
+                return true;
             }
             return false;
         });

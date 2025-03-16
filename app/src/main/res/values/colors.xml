@@ -17,6 +17,8 @@
     <color name="text_name">#222222</color>
     <color name="text_dark">#212121</color>
     <color name="light_gray">#D3D3D3</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="accent">#FF5722</color>
 
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

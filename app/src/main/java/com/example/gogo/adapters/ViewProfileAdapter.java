@@ -281,11 +281,6 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             buttonChangePassword = itemView.findViewById(R.id.buttonChangePassword);
             buttonLogout = itemView.findViewById(R.id.buttonLogout);
 
-            buttonLogout.setOnClickListener(v -> {
-                if (context instanceof ViewProfileActivity) {
-                    ((ViewProfileActivity) context).logout();
-                }
-            });
         }
 
         void bind() {

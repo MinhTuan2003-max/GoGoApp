@@ -92,6 +92,10 @@ public class ViewProfileActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_profile) {
                 // Đã ở ViewProfileActivity, không cần làm gì
                 return true;
+            } else if (itemId == R.id.nav_settings) {
+                startActivity(new Intent(ViewProfileActivity.this, SettingActivity.class));
+                finish();
+                return true;
             }
             return false;
         });

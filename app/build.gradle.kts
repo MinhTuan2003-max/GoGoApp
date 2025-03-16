@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     // Unit test
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
