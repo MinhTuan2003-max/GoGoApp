@@ -19,6 +19,10 @@
             android:value="587504441172-pg3i1k9lcu6uhahff32gncs8dbnqo1d4.apps.googleusercontent.com" />
 
         <activity
+            android:name=".ui.BodyFatActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
             android:name=".ui.WeightLossActivity"
             android:exported="false"
             android:theme="@style/Theme.GoGo" />

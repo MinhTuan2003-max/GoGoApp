@@ -4,6 +4,8 @@ public class HealthData {
     public float bmi;
     public float bmr;
 
+    public HealthData() {}
+
     public HealthData(float bmi, float bmr) {
         this.bmi = bmi;
         this.bmr = bmr;

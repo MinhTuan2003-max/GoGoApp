@@ -94,11 +94,11 @@ public class ViewProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return 4; // 4 phần: Profile Header, Body Measurements, Account Settings, Privacy
+        return 4;
     }
 
     public void refreshData() {
-        notifyDataSetChanged(); // Làm mới toàn bộ dữ liệu
+        notifyDataSetChanged();
     }
 
     class ProfileHeaderViewHolder extends RecyclerView.ViewHolder {

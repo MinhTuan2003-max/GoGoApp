@@ -56,7 +56,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/optionsCardView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
@@ -69,7 +69,6 @@
         app:layout_constraintTop_toBottomOf="@+id/nameTextView"
         app:layout_constraintBottom_toTopOf="@id/buttonLogout">
 
-        <!-- Tiêu đề phần danh sách -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

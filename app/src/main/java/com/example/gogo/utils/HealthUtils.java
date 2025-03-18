@@ -1,26 +1,21 @@
 package com.example.gogo.utils;
 
 public class HealthUtils {
-    // Calculate BMI: weight (kg) / (height (m) * height (m))
     public static float calculateBMI(float heightCm, float weightKg) {
-        float heightM = heightCm / 100; // Convert cm to meters
+        float heightM = heightCm / 100;
         return weightKg / (heightM * heightM);
     }
 
-    // Calculate BMR using Mifflin-St Jeor Equation
     public static float calculateBMR(float heightCm, float weightKg, int age, String gender) {
         float bmr;
         if (gender.equalsIgnoreCase("Nam")) {
-            // For men: BMR = 10 * weight (kg) + 6.25 * height (cm) - 5 * age + 5
             bmr = (10 * weightKg) + (6.25f * heightCm) - (5 * age) + 5;
         } else {
-            // For women: BMR = 10 * weight (kg) + 6.25 * height (cm) - 5 * age - 161
             bmr = (10 * weightKg) + (6.25f * heightCm) - (5 * age) - 161;
         }
         return bmr;
     }
 
-    // Calculate TDEE based on BMR and activity level
     public static float calculateTDEE(float bmr, String activityLevel) {
         float multiplier;
         switch (activityLevel.toLowerCase()) {

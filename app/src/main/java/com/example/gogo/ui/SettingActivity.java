@@ -43,15 +43,12 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        // Ánh xạ các thành phần giao diện
         optionsRecyclerView = findViewById(R.id.optionsRecyclerView);
         signOutButton = findViewById(R.id.buttonLogout);
         profileImage = findViewById(R.id.profileImage);
-        nameTextView = findViewById(R.id.nameTextView); // Sửa lỗi typo findViewId thành findViewById
+        nameTextView = findViewById(R.id.nameTextView);
 
-        // Khởi tạo DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
-        // Khởi tạo AccountDAO với DatabaseHelper
         accountDAO = new AccountDAO(databaseHelper);
 
         // Khởi tạo GoogleSignInClient
@@ -62,20 +59,16 @@ public class SettingActivity extends AppCompatActivity {
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Lấy thông tin người dùng từ database
         loadUserData();
 
-        // Thiết lập RecyclerView
         setupRecyclerView();
 
-        // Thiết lập sự kiện cho nút Đăng xuất
         signOutButton.setOnClickListener(v -> {
             Toast.makeText(this, "Signing out...", Toast.LENGTH_SHORT).show();
             logout();
             finish();
         });
 
-        // Thiết lập BottomNavigationView
         setupBottomNavigation();
     }
 
@@ -84,10 +77,8 @@ public class SettingActivity extends AppCompatActivity {
         if (account != null) {
             String googleId = account.getId();
             if (googleId != null) {
-                // Lấy thông tin từ database
                 User user = accountDAO.getUserByGoogleId(googleId);
                 if (user != null) {
-                    // Hiển thị tên người dùng
                     String fullName = user.getFullName();
                     if (fullName != null && !fullName.isEmpty()) {
                         nameTextView.setText(fullName);
@@ -95,7 +86,6 @@ public class SettingActivity extends AppCompatActivity {
                         nameTextView.setText("User Name");
                     }
 
-                    // Hiển thị avatar
                     String profileImageUrl = user.getProfileImageUrl();
                     if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                         Glide.with(this)
@@ -107,14 +97,12 @@ public class SettingActivity extends AppCompatActivity {
                         profileImage.setImageResource(R.drawable.default_avatar);
                     }
                 } else {
-                    // Nếu không tìm thấy trong database, sử dụng thông tin mặc định
                     nameTextView.setText("User Name");
                     profileImage.setImageResource(R.drawable.default_avatar);
                     Toast.makeText(this, "User data not found in database", Toast.LENGTH_SHORT).show();
                 }
             }
         } else {
-            // Nếu không có tài khoản Google, quay lại MainActivity
             Intent intent = new Intent(SettingActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -125,32 +113,35 @@ public class SettingActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         List<SettingOption> options = new ArrayList<>();
         options.add(new SettingOption(1, "So sánh cân nặng", R.drawable.ic_compare));
-        options.add(new SettingOption(2, "Thông báo", R.drawable.ic_notification));
-        options.add(new SettingOption(3, "Điều khoản và chính sách", R.drawable.ic_terms));
-        options.add(new SettingOption(4, "Về chúng tôi", R.drawable.ic_about_us));
+        options.add(new SettingOption(2, "Tính toán BFP", R.drawable.ic_body_fat));
+        options.add(new SettingOption(3, "Thông báo", R.drawable.ic_notification));
+        options.add(new SettingOption(4, "Điều khoản và chính sách", R.drawable.ic_terms));
+        options.add(new SettingOption(5, "Về chúng tôi", R.drawable.ic_about_us));
 
-        // Setup adapter
         adapter = new SettingOptionAdapter(options, option -> {
             switch (option.getId()) {
                 case 1: // Compare
                     Intent compareIntent = new Intent(SettingActivity.this, WeightLossActivity.class);
                     startActivity(compareIntent);
                     break;
-                case 2: // Notifications
+                case 2: // Body Fat
+                    Intent bodyFatIntent = new Intent(SettingActivity.this, BodyFatActivity.class);
+                    startActivity(bodyFatIntent);
+                    break;
+                case 3: // Notifications
                     // Navigate to Notifications feature
                     break;
-                case 3: // Terms
+                case 4: // Terms
                     Intent termsIntent = new Intent(SettingActivity.this, TermsActivity.class);
                     startActivity(termsIntent);
                     break;
-                case 4: // About Us
+                case 5: // About Us
                     Intent intent = new Intent(SettingActivity.this, AboutUsActivity.class);
                     startActivity(intent);
                     break;
             }
         });
 
-        // Setup recycler view
         optionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         optionsRecyclerView.setAdapter(adapter);
     }
@@ -192,7 +183,6 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Chỉ gọi close() trên databaseHelper vì AccountDAO không có phương thức close()
         if (databaseHelper != null) {
             databaseHelper.close();
         }
