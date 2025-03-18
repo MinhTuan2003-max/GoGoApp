@@ -26,14 +26,6 @@ public class NutrientPlanActiivity extends AppCompatActivity {
         List<NutrientPlanCardItem> cardItems = new ArrayList<>();
         cardItems.add(new NutrientPlanCardItem("Card 1", "Description 1"));
         cardItems.add(new NutrientPlanCardItem("Card 2", "Description 2"));
-        cardItems.add(new NutrientPlanCardItem("Card 3", "Description 3"));
-        cardItems.add(new NutrientPlanCardItem("Card 4", "Description 4"));
-        cardItems.add(new NutrientPlanCardItem("Card 5", "Description 5"));
-        cardItems.add(new NutrientPlanCardItem("Card 6", "Description 6"));
-        cardItems.add(new NutrientPlanCardItem("Card 7", "Description 7"));
-        cardItems.add(new NutrientPlanCardItem("Card 8", "Description 8"));
-        cardItems.add(new NutrientPlanCardItem("Card 9", "Description 9"));
-        cardItems.add(new NutrientPlanCardItem("Card 10", "Description 10"));
         // Thêm các card khác nếu cần
 
         NutrientCardAdapter adapter = new NutrientCardAdapter(cardItems, this);
