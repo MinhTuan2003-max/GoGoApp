@@ -7,50 +7,49 @@
     app:cardElevation="8dp"
     android:layout_marginBottom="16dp"
     android:clickable="true"
-    android:focusable="true"
-    android:background="?attr/selectableItemBackground">
+    android:focusable="true">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+<RelativeLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:padding="16dp"
+android:background="#E3A662">
+
+<!-- Nội dung chính của card -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_toStartOf="@+id/nextButton"
+    android:layout_alignParentStart="true">
+
+    <TextView
+        android:id="@+id/cardTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="#E3A662">
+        android:text="Card Title"
+        android:textSize="18sp"
+        android:textColor="@color/white" />
 
-        <!-- Nội dung chính của card -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toStartOf="@+id/nextButton"
-            android:layout_alignParentStart="true">
+    <TextView
+        android:id="@+id/cardDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Card Description"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white" />
+</LinearLayout>
 
-            <TextView
-                android:id="@+id/cardTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Plan Name"
-                android:textSize="18sp"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/cardDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Created At"
-                android:textSize="14sp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <!-- Button với icon mũi tên sang phải -->
-        <ImageView
-            android:id="@+id/nextButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_next"
-            android:layout_marginEnd="8dp"
-        />
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
+<!-- Button với icon mũi tên sang phải -->
+<ImageView
+    android:id="@+id/nextButton"
+    android:layout_width="56dp"
+    android:layout_height="56dp"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true"
+    android:src="@drawable/ic_next"
+    android:clickable="true"
+    android:focusable="true" />
+</RelativeLayout>
+    </androidx.cardview.widget.CardView>

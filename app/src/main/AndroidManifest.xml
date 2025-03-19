@@ -13,7 +13,7 @@
         android:theme="@style/Theme.GoGo"
         tools:targetApi="35">
         <activity
-            android:name=".ui.NutrientStartedActivity"
+            android:name=".ui.Nutrient7PlanActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,10 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.NutrientSelectActivity" />
-        <activity android:name=".ui.NutrientPlanActivity" />
-        <activity android:name=".ui.NutrientPlanDetailActivity" />
-        <activity android:name=".ui.Nutrient7PlanActivity" />
     </application>
 
 </manifest>
