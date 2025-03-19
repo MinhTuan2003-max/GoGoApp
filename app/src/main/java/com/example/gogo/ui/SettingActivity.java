@@ -51,7 +51,6 @@ public class SettingActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
         accountDAO = new AccountDAO(databaseHelper);
 
-        // Khởi tạo GoogleSignInClient
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestProfile()
@@ -129,7 +128,8 @@ public class SettingActivity extends AppCompatActivity {
                     startActivity(bodyFatIntent);
                     break;
                 case 3: // Notifications
-                    // Navigate to Notifications feature
+                    Intent notificationIntent = new Intent(SettingActivity.this, ReminderSettingsActivity.class);
+                    startActivity(notificationIntent);
                     break;
                 case 4: // Terms
                     Intent termsIntent = new Intent(SettingActivity.this, TermsActivity.class);

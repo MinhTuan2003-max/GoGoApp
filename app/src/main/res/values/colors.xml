@@ -13,6 +13,7 @@
 
     <!-- Màu nút -->
     <color name="facebook_blue">#1877F2</color>
+    <color name="black_transparent">#80000000</color>
 
     <color name="text_name">#222222</color>
     <color name="text_dark">#212121</color>

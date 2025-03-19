@@ -20,12 +20,11 @@ public class HealthRepository {
 
     public HealthRepository(Context context) {
         this.context = context;
-        this.databaseHelper = new DatabaseHelper(context); // Centralized database helper
-        this.healthIndexDAO = new HealthIndexDAO(databaseHelper); // Now compatible
+        this.databaseHelper = new DatabaseHelper(context);
+        this.healthIndexDAO = new HealthIndexDAO(databaseHelper);
         this.accountDAO = new AccountDAO(databaseHelper);
     }
 
-    // Save health index data
     public boolean saveHealthIndex(String googleId) {
         try {
             User user = accountDAO.getUserByGoogleId(googleId);
@@ -51,32 +50,6 @@ public class HealthRepository {
         }
     }
 
-    // Get latest health index data
-    public HealthData getLatestHealthIndex(int userId) {
-        Cursor cursor = null;
-        HealthData healthData = null;
-
-        try {
-            cursor = healthIndexDAO.getLatestHealthIndex(userId);
-            if (cursor != null && cursor.moveToFirst()) {
-                float bmi = cursor.getFloat(cursor.getColumnIndexOrThrow("BMI"));
-                float bmr = cursor.getFloat(cursor.getColumnIndexOrThrow("BMR"));
-                healthData = new HealthData(bmi, bmr);
-                Log.d(TAG, "Retrieved health data for UserID " + userId + ": BMI=" + bmi + ", BMR=" + bmr);
-            } else {
-                Log.w(TAG, "No health data found for UserID: " + userId);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error retrieving health index for UserID: " + userId, e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return healthData;
-    }
-
-    // Get user data
     public User getUserData(String googleId) {
         try {
             User user = accountDAO.getUserByGoogleId(googleId);

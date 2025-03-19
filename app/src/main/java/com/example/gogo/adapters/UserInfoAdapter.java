@@ -33,7 +33,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         this.context = context;
         this.user = user;
         this.dbHelper = new DatabaseHelper(context);
-
+        this.accountDAO = new AccountDAO(dbHelper); // Initialize accountDAO here
     }
 
     @NonNull
@@ -94,8 +94,19 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
                 gender = "Khác";
             }
 
-            float weight = Float.parseFloat(holder.editTextWeight.getText().toString().isEmpty() ? "0" : holder.editTextWeight.getText().toString());
-            float height = Float.parseFloat(holder.editTextHeight.getText().toString().isEmpty() ? "0" : holder.editTextHeight.getText().toString());
+            // Safely parse weight and height, default to 0 if empty
+            float weight = 0;
+            float height = 0;
+            try {
+                String weightText = holder.editTextWeight.getText().toString();
+                weight = weightText.isEmpty() ? 0 : Float.parseFloat(weightText);
+                String heightText = holder.editTextHeight.getText().toString();
+                height = heightText.isEmpty() ? 0 : Float.parseFloat(heightText);
+            } catch (NumberFormatException e) {
+                Toast.makeText(context, "Vui lòng nhập số hợp lệ cho cân nặng và chiều cao", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             int age = 2025 - holder.numberPickerYear.getValue();
 
             // Update database
@@ -108,9 +119,9 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
                 user.setHeight(height);
                 user.setAge(age);
                 Toast.makeText(context, "Đã cập nhật thông tin", Toast.LENGTH_SHORT).show();
-                notifyDataSetChanged(); // Cập nhật UI
+                notifyDataSetChanged(); // Update UI
 
-                // Chuyển sang HomeActivity sau khi lưu thành công
+                // Navigate to HomeActivity after successful save
                 Intent intent = new Intent(context, HomeActivity.class);
                 context.startActivity(intent);
                 if (context instanceof Activity) {

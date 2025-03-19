@@ -1,23 +1,42 @@
 package com.example.gogo.ui;
 
+import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.gogo.R;
 import com.example.gogo.adapters.HomeAdapter;
+import com.example.gogo.adapters.NotificationAdapter;
 import com.example.gogo.adapters.SliderAdapter;
 import com.example.gogo.database.AccountDAO;
 import com.example.gogo.database.DatabaseHelper;
+import com.example.gogo.database.NotificationDAO;
+import com.example.gogo.models.Notification;
 import com.example.gogo.models.SliderItem;
 import com.example.gogo.models.User;
+import com.example.gogo.service.NotificationService;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -27,8 +46,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class HomeActivity extends AppCompatActivity {
     private ImageView avatarImageView;
@@ -36,18 +58,28 @@ public class HomeActivity extends AppCompatActivity {
     private TextView userNameTextView;
     private DatabaseHelper databaseHelper;
     private AccountDAO accountDAO;
+    private NotificationDAO notificationDAO;
     private GoogleSignInClient googleSignInClient;
     private BottomNavigationView bottomNavigationView;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private RecyclerView recyclerView;
+    private ImageView notificationIcon;
+    private RelativeLayout notificationContainer;
+    private CardView notificationPanel;
+    private TextView notificationTitle;
+    private RecyclerView notificationRecyclerView;
+    private NotificationAdapter notificationAdapter;
+    private List<Notification> notifications;
+    private ImageView notificationBackdrop;
+    private boolean isNotificationVisible = false;
+    private int userId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Initialize views
         avatarImageView = findViewById(R.id.avatar);
         welcomeTextView = findViewById(R.id.greeting_text);
         userNameTextView = findViewById(R.id.user_name_text);
@@ -55,25 +87,212 @@ public class HomeActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tab_indicator);
         recyclerView = findViewById(R.id.recycler_view_medications);
+        notificationIcon = findViewById(R.id.notification_icon);
 
-        // Setup database and Google Sign-In
         databaseHelper = new DatabaseHelper(this);
         accountDAO = new AccountDAO(databaseHelper);
+        notificationDAO = new NotificationDAO(databaseHelper);
         googleSignInClient = GoogleSignIn.getClient(this,
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build());
 
-        // Setup RecyclerView
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("USER_ID")) {
+            userId = intent.getIntExtra("USER_ID", -1);
+        }
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         HomeAdapter adapter = new HomeAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        // Load user data and setup UI
+        notifications = new ArrayList<>();
+
         loadUserData();
         setupSlider();
         setupBottomNavigation();
+        setupNotificationUI();
 
-        // Setup logout button if you want to add it
-        // Note: Your layout doesn't have a logout button, add it if needed
+        notificationIcon.setOnClickListener(v -> toggleNotificationList());
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        }
+
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        serviceIntent.putExtra("userId", userId);
+        startService(serviceIntent);
+    }
+
+    private void setupNotificationUI() {
+        notificationBackdrop = new ImageView(this);
+        notificationBackdrop.setBackgroundColor(ContextCompat.getColor(this, R.color.black_transparent));
+        notificationBackdrop.setVisibility(View.GONE);
+        notificationBackdrop.setOnClickListener(v -> toggleNotificationList());
+
+        RelativeLayout.LayoutParams backdropParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        notificationPanel = new CardView(this);
+        notificationPanel.setCardElevation(dpToPx(8));
+        notificationPanel.setRadius(dpToPx(16));
+        notificationPanel.setCardBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        notificationPanel.setVisibility(View.GONE);
+
+        LinearLayout panelContent = new LinearLayout(this);
+        panelContent.setOrientation(LinearLayout.VERTICAL);
+        panelContent.setPadding(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16));
+        panelContent.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        notificationTitle = new TextView(this);
+        notificationTitle.setText("Thông báo");
+        notificationTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        notificationTitle.setTextColor(ContextCompat.getColor(this, R.color.black));
+        notificationTitle.setTypeface(null, android.graphics.Typeface.BOLD);
+        notificationTitle.setPadding(0, 0, 0, dpToPx(16));
+
+        ImageView closeButton = new ImageView(this);
+        closeButton.setImageResource(R.drawable.ic_close);
+        closeButton.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8));
+        closeButton.setOnClickListener(v -> toggleNotificationList());
+
+        LinearLayout headerContainer = new LinearLayout(this);
+        headerContainer.setOrientation(LinearLayout.HORIZONTAL);
+        headerContainer.setGravity(Gravity.CENTER_VERTICAL);
+
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        headerContainer.addView(notificationTitle, titleParams);
+        headerContainer.addView(closeButton);
+
+        notificationRecyclerView = new RecyclerView(this);
+        notificationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        notificationAdapter = new NotificationAdapter(notifications);
+        notificationRecyclerView.setAdapter(notificationAdapter);
+        notificationRecyclerView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        notificationRecyclerView.setHasFixedSize(false);
+
+        panelContent.addView(headerContainer);
+
+        View divider = new View(this);
+        divider.setBackgroundColor(ContextCompat.getColor(this, R.color.light_gray));
+        LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(1));
+        dividerParams.setMargins(0, 0, 0, dpToPx(16));
+        panelContent.addView(divider, dividerParams);
+
+        panelContent.addView(notificationRecyclerView);
+        notificationPanel.addView(panelContent);
+
+        // Container chính
+        notificationContainer = new RelativeLayout(this);
+        notificationContainer.setVisibility(View.GONE);
+
+        notificationContainer.addView(notificationBackdrop, backdropParams);
+
+        RelativeLayout.LayoutParams panelParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        panelParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        panelParams.setMargins(dpToPx(16), dpToPx(56), dpToPx(16), 0);
+        notificationContainer.addView(notificationPanel, panelParams);
+
+        ViewGroup rootView = findViewById(android.R.id.content);
+        rootView.addView(notificationContainer, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+
+    private void loadWelcomeBackNotifications() {
+        notifications.clear();
+
+        if (userId != -1) {
+            Cursor cursor = notificationDAO.getUserNotifications(userId);
+            try {
+                while (cursor.moveToNext()) {
+                    int id = cursor.getInt(0);
+                    String message = cursor.getString(1);
+                    String time = cursor.getString(2);
+                    int isRead = cursor.getInt(3);
+                    int type = cursor.getInt(4); // Giả định cột Type là cột thứ 5
+
+                    Log.d("Notification", "ID: " + id + ", Message: " + message + ", Time: " + time + ", IsRead: " + isRead + ", Type: " + type);
+
+                    // Hiển thị tất cả thông báo với trạng thái [Chưa xem] hoặc [Đã xem]
+                    String displayMessage = (isRead == 0 ? "[Chưa xem] " : "[Đã xem] ") + message;
+                    Notification notification = new Notification(id, null, displayMessage, time, isRead, type);
+                    notifications.add(notification);
+
+                    // Đánh dấu thông báo chưa đọc thành đã đọc ngay khi hiển thị
+                    if (isRead == 0) {
+                        notificationDAO.markNotificationAsRead(id);
+                    }
+                }
+            } finally {
+                cursor.close();
+            }
+
+            if (notifications.isEmpty()) {
+                notifications.add(new Notification(
+                        -1, null, "Không có thông báo nào", "", 1, 0));
+            }
+        } else {
+            notifications.add(new Notification(
+                    -1, null, "Không thể tải thông báo: userId không hợp lệ", "", 1, 0));
+        }
+
+        notificationAdapter.notifyDataSetChanged();
+    }
+
+    // Phương thức lấy thời gian hiện tại (thêm vào class)
+    private String getCurrentTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return sdf.format(new Date());
+    }
+
+    private void toggleNotificationList() {
+        isNotificationVisible = !isNotificationVisible;
+        if (isNotificationVisible) {
+            loadWelcomeBackNotifications();
+            notificationContainer.setVisibility(View.VISIBLE);
+            notificationBackdrop.setVisibility(View.VISIBLE);
+            notificationPanel.setTranslationY(-notificationPanel.getHeight());
+            notificationPanel.setAlpha(0f);
+            notificationPanel.setVisibility(View.VISIBLE);
+            notificationPanel.animate()
+                    .translationY(0)
+                    .alpha(1f)
+                    .setDuration(300)
+                    .setListener(null);
+            notificationBackdrop.animate()
+                    .alpha(1f)
+                    .setDuration(300)
+                    .setListener(null);
+        } else {
+            notificationPanel.animate()
+                    .translationY(-notificationPanel.getHeight())
+                    .alpha(0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            notificationPanel.setVisibility(View.GONE);
+                            notificationContainer.setVisibility(View.GONE);
+                        }
+                    });
+            notificationBackdrop.animate()
+                    .alpha(0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            notificationBackdrop.setVisibility(View.GONE);
+                        }
+                    });
+        }
     }
 
     private void loadUserData() {
@@ -90,6 +309,7 @@ public class HomeActivity extends AppCompatActivity {
                             .error(R.drawable.default_avatar)
                             .into(avatarImageView);
                 }
+                userId = user.getUserId();
             } else {
                 welcomeTextView.setText("Hello,");
                 userNameTextView.setText(account.getDisplayName());
@@ -100,9 +320,10 @@ public class HomeActivity extends AppCompatActivity {
                             .error(R.drawable.default_avatar)
                             .into(avatarImageView);
                 }
+                userId = accountDAO.getUserIdByGoogleId(account.getId());
             }
         } else {
-            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
@@ -158,5 +379,17 @@ public class HomeActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (databaseHelper != null) {
+            databaseHelper.close();
+        }
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
     }
 }

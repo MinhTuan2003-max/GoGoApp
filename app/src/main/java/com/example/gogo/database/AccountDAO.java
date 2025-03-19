@@ -94,8 +94,47 @@ public class AccountDAO {
             values.put("FullName", fullName);
 
             int rowsAffected = db.update("Users", values, "GoogleID = ?", new String[]{googleId});
-            return rowsAffected > 0; // Returns true if at least one row was updated
+            return rowsAffected > 0;
         } finally {
+            db.close();
+        }
+    }
+
+    public int getUserIdByGoogleId(String googleId) {
+        SQLiteDatabase db = databaseHelper.getDatabase(false);
+        Cursor cursor = db.rawQuery("SELECT UserID FROM Users WHERE GoogleID = ?", new String[]{googleId});
+        try {
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+            return -1;
+        } finally {
+            cursor.close();
+            db.close();
+        }
+    }
+
+    public User getUserById(int userId) {
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE UserID = ?", new String[]{String.valueOf(userId)});
+        try {
+            if (cursor.moveToFirst()) {
+                return new User(
+                        cursor.getInt(0), // UserID
+                        cursor.getString(1), // GoogleID
+                        cursor.getString(2), // FullName
+                        cursor.getString(3), // Email
+                        cursor.getString(4), // ProfileImageUrl
+                        cursor.isNull(5) ? null : cursor.getInt(5), // Age
+                        cursor.getString(6), // Gender
+                        cursor.isNull(7) ? null : cursor.getFloat(7), // Height
+                        cursor.isNull(8) ? null : cursor.getFloat(8), // Weight
+                        cursor.getString(9)  // CreatedAt
+                );
+            }
+            return null; // User not found
+        } finally {
+            cursor.close();
             db.close();
         }
     }

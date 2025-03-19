@@ -19,29 +19,28 @@ public class HealthUtils {
     public static float calculateTDEE(float bmr, String activityLevel) {
         float multiplier;
         switch (activityLevel.toLowerCase()) {
-            case "sedentary": // Little or no exercise
+            case "sedentary":
                 multiplier = 1.2f;
                 break;
-            case "light": // Light exercise/sports 1-3 days/week
+            case "light":
                 multiplier = 1.375f;
                 break;
-            case "moderate": // Moderate exercise/sports 3-5 days/week
+            case "moderate":
                 multiplier = 1.55f;
                 break;
-            case "active": // Hard exercise/sports 6-7 days/week
+            case "active":
                 multiplier = 1.725f;
                 break;
-            case "very active": // Very hard exercise/sports & physical job
+            case "very active":
                 multiplier = 1.9f;
                 break;
-            default:
-                multiplier = 1.2f; // Default to sedentary if unknown
+            default: // default
+                multiplier = 1.2f;
                 break;
         }
         return bmr * multiplier;
     }
 
-    // Get BMI category based on WHO Asia-Pacific standards
     public static String getBMICategory(float bmi) {
         if (bmi < 18.5) {
             return "Thiếu cân";
