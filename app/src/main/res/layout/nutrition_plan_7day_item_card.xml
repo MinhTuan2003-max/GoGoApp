@@ -11,63 +11,112 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="@android:color/white">
 
+        <!-- Ngày -->
         <TextView
             android:id="@+id/tvDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Day 1"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="16dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bữa sáng"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
-
+        <!-- Bữa sáng -->
         <LinearLayout
-            android:id="@+id/breakfastLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="4dp"/>
+            android:background="@drawable/nutrient_border_bottom"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="8dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bữa trưa"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bữa sáng"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
 
+            <LinearLayout
+                android:id="@+id/breakfastLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+        <!-- Bữa trưa -->
         <LinearLayout
-            android:id="@+id/lunchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="4dp"/>
+            android:background="@drawable/nutrient_border_bottom"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="8dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bữa tối"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bữa trưa"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
 
+            <LinearLayout
+                android:id="@+id/lunchLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+        <!-- Bữa tối -->
         <LinearLayout
-            android:id="@+id/dinnerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="4dp"/>
+            android:background="@drawable/nutrient_border_bottom"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="8dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bữa tối"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
+
+            <LinearLayout
+                android:id="@+id/dinnerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+        </LinearLayout>
+
+        <!-- Checkbox hoàn thành -->
         <CheckBox
             android:id="@+id/checkBoxCompleted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hoàn thành"
-            android:layout_marginTop="16dp"/>
+            android:textColor="@android:color/black"
+            android:layout_marginTop="16dp"
+            android:buttonTint="@color/purple_500"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:drawablePadding="8dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

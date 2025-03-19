@@ -2,7 +2,6 @@ package com.example.gogo.adapters;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +47,7 @@ public class Nutrient7PlanCardAdapter extends RecyclerView.Adapter<Nutrient7Plan
 
         // Xử lý sự kiện khi checkbox thay đổi
         holder.checkBoxCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            dayPlan.setCompleted(isChecked);
-            updateCompletionStatus(position, isChecked);
+            updateCompletionStatus(isChecked);
         });
     }
 
@@ -83,11 +81,16 @@ public class Nutrient7PlanCardAdapter extends RecyclerView.Adapter<Nutrient7Plan
         }
     }
 
-    private void updateCompletionStatus(int position, boolean isCompleted) {
+    private void updateCompletionStatus(boolean isCompleted) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        // Cập nhật trạng thái isCompleted trong bảng DietPlan (giả sử bạn muốn lưu trạng thái cho cả plan)
-        db.execSQL("UPDATE DietPlan SET isCompleted = ? WHERE DietID = ?", new Object[]{isCompleted ? 1 : 0, dietId});
-        Log.d("Nutrient7PlanCardAdapter", "Updated completion status for DietID " + dietId + " to " + isCompleted);
+        db.execSQL("UPDATE DietPlan SET isCompleted = ? WHERE DietID = ?",
+                new Object[]{isCompleted ? 1 : 0, dietId});
         db.close();
+
+        // Cập nhật trạng thái cho tất cả dayPlans
+        for (NutritionDayPlan plan : dayPlans) {
+            plan.setCompleted(isCompleted);
+        }
+        notifyDataSetChanged();
     }
 }
