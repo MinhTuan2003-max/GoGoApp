@@ -60,4 +60,10 @@ public class NotificationDAO {
             db.close();
         }
     }
+
+    public Cursor getLatestUserNotification(int userId) {
+        SQLiteDatabase db = dbHelper.getDatabase(false);
+        String query = "SELECT NotificationID, Message, NotifyTime, IsRead, Type FROM Notification WHERE UserID = ? ORDER BY NotifyTime DESC LIMIT 1";
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
 }

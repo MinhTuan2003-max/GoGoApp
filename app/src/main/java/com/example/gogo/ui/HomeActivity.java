@@ -188,7 +188,6 @@ public class HomeActivity extends AppCompatActivity {
         panelContent.addView(notificationRecyclerView);
         notificationPanel.addView(panelContent);
 
-        // Container chính
         notificationContainer = new RelativeLayout(this);
         notificationContainer.setVisibility(View.GONE);
 
@@ -210,23 +209,21 @@ public class HomeActivity extends AppCompatActivity {
         notifications.clear();
 
         if (userId != -1) {
-            Cursor cursor = notificationDAO.getUserNotifications(userId);
+            Cursor cursor = notificationDAO.getLatestUserNotification(userId);
             try {
                 while (cursor.moveToNext()) {
                     int id = cursor.getInt(0);
                     String message = cursor.getString(1);
                     String time = cursor.getString(2);
                     int isRead = cursor.getInt(3);
-                    int type = cursor.getInt(4); // Giả định cột Type là cột thứ 5
+                    int type = cursor.getInt(4);
 
                     Log.d("Notification", "ID: " + id + ", Message: " + message + ", Time: " + time + ", IsRead: " + isRead + ", Type: " + type);
 
-                    // Hiển thị tất cả thông báo với trạng thái [Chưa xem] hoặc [Đã xem]
                     String displayMessage = (isRead == 0 ? "[Chưa xem] " : "[Đã xem] ") + message;
                     Notification notification = new Notification(id, null, displayMessage, time, isRead, type);
                     notifications.add(notification);
 
-                    // Đánh dấu thông báo chưa đọc thành đã đọc ngay khi hiển thị
                     if (isRead == 0) {
                         notificationDAO.markNotificationAsRead(id);
                     }
@@ -245,12 +242,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         notificationAdapter.notifyDataSetChanged();
-    }
-
-    // Phương thức lấy thời gian hiện tại (thêm vào class)
-    private String getCurrentTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return sdf.format(new Date());
     }
 
     private void toggleNotificationList() {
