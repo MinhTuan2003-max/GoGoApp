@@ -16,11 +16,8 @@ import com.example.gogo.R;
 import com.example.gogo.database.AccountDAO;
 import com.example.gogo.database.DatabaseHelper;
 import com.example.gogo.models.User;
-import com.github.mikephil.charting.charts.LineChart; // Thay BarChart bằng LineChart
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -52,17 +49,15 @@ public class WeightLossActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight_loss);
 
-        // Ánh xạ các thành phần giao diện
         targetWeightInput = findViewById(R.id.targetWeightInput);
         calculateButton = findViewById(R.id.calculateButton);
         resultTextView = findViewById(R.id.resultTextView);
-        barChart = findViewById(R.id.barChart); // Đã đổi thành LineChart trong layout
+        barChart = findViewById(R.id.barChart);
         btnBack = findViewById(R.id.btnBack);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         notesTextView = findViewById(R.id.notesTextView);
         currentWeightTextView = findViewById(R.id.currentWeightValue);
 
-        // Khởi tạo DatabaseHelper và AccountDAO
         databaseHelper = new DatabaseHelper(this);
         accountDAO = new AccountDAO(databaseHelper);
 
@@ -70,18 +65,14 @@ public class WeightLossActivity extends AppCompatActivity {
         User user = accountDAO.getUserByGoogleId(account.getId());
         currentWeightTextView.setText(user.getWeight() + " " + "kg");
 
-        // Thiết lập sự kiện cho nút quay lại
         btnBack.setOnClickListener(v -> finish());
 
-        // Thiết lập sự kiện cho nút tính toán
         calculateButton.setOnClickListener(v -> calculateWeightLoss());
 
-        // Thiết lập BottomNavigationView
         setupBottomNavigation();
     }
 
     private void calculateWeightLoss() {
-        // Lấy cân nặng mong muốn từ input
         String targetWeightStr = targetWeightInput.getText().toString().trim();
         if (targetWeightStr.isEmpty()) {
             Toast.makeText(this, "Vui lòng nhập cân nặng mong muốn!", Toast.LENGTH_SHORT).show();
@@ -96,7 +87,6 @@ public class WeightLossActivity extends AppCompatActivity {
             return;
         }
 
-        // Lấy cân nặng hiện tại từ database
         User user = accountDAO.getUserByGoogleId(account.getId());
         if (user == null) {
             Toast.makeText(this, "Không tìm thấy thông tin người dùng trong database!", Toast.LENGTH_SHORT).show();
@@ -109,7 +99,6 @@ public class WeightLossActivity extends AppCompatActivity {
             return;
         }
 
-        // Tính toán thời gian giảm cân
         double weightToLose = currentWeight - targetWeight;
         double caloriesPerKg = 7700;
         double totalCaloriesToLose = weightToLose * caloriesPerKg;
@@ -118,22 +107,21 @@ public class WeightLossActivity extends AppCompatActivity {
         int weeksToLose = (int) Math.ceil(daysToLose / 7);
         int monthsToLose = (int) Math.ceil(daysToLose / 30);
 
-        // Xác định đơn vị thời gian
         String timeUnit;
         int timeUnitsToLose;
         double stepSize;
-        if (daysToLose < 7) { // Dưới 1 tuần, dùng ngày
+        if (daysToLose < 7) {
             timeUnit = "ngày";
             timeUnitsToLose = (int) Math.ceil(daysToLose);
-            stepSize = 1; // Bước là 1 ngày
-        } else if (weeksToLose > 6) { // Trên 6 tuần, dùng tháng
+            stepSize = 1;
+        } else if (weeksToLose > 6) {
             timeUnit = "tháng";
             timeUnitsToLose = monthsToLose;
-            stepSize = daysToLose / monthsToLose; // Bước là số ngày trên mỗi tháng
-        } else { // Từ 1 đến 6 tuần, dùng tuần
+            stepSize = daysToLose / monthsToLose;
+        } else {
             timeUnit = "tuần";
             timeUnitsToLose = weeksToLose;
-            stepSize = 7; // Bước là 1 tuần (7 ngày)
+            stepSize = 7;
         }
 
         // Hiển thị kết quả
@@ -143,11 +131,9 @@ public class WeightLossActivity extends AppCompatActivity {
         resultTextView.setText(result);
         resultTextView.setVisibility(View.VISIBLE);
 
-        // Cập nhật ghi chú với cân nặng hiện tại
         String notes = getString(R.string.weight_loss_notes).replace("[Sẽ cập nhật khi tính toán]", df.format(currentWeight) + " kg");
         notesTextView.setText(notes);
 
-        // Vẽ biểu đồ khu vực
         drawAreaChart(timeUnitsToLose, timeUnit, currentWeight, targetWeight, stepSize);
     }
 
@@ -172,11 +158,11 @@ public class WeightLossActivity extends AppCompatActivity {
         dataSet.setColor(getResources().getColor(android.R.color.holo_blue_dark));
         dataSet.setValueTextColor(getResources().getColor(android.R.color.black));
         dataSet.setValueTextSize(10f);
-        dataSet.setDrawFilled(true); // Tạo khu vực dưới đường
+        dataSet.setDrawFilled(true);
         dataSet.setFillColor(getResources().getColor(android.R.color.holo_blue_light));
 
         LineData lineData = new LineData(dataSet);
-        barChart.setData(lineData); // Bây giờ barChart là LineChart, nên sẽ không lỗi
+        barChart.setData(lineData);
         barChart.getDescription().setEnabled(false);
         barChart.getAxisRight().setEnabled(false);
 
