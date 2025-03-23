@@ -1,0 +1,47 @@
+<resources>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="weight_loss_notes">
+        - Giảm cân an toàn: 0.5-1 kg/tuần theo khuyến nghị khoa học.\n
+        - Thời gian tính toán dựa trên việc duy trì chế độ ăn uống điều độ và tập luyện.\n
+        - Kết quả chỉ mang tính tham khảo, hãy tham khảo ý kiến bác sĩ trước khi áp dụng.\n
+        - Cân nặng hiện tại: [Sẽ cập nhật khi tính toán]
+    </string>
+
+    <string-array name="water_intervals">
+        <item>30 phút</item>
+        <item>1 giờ</item>
+        <item>1 giờ 30 phút</item>
+        <item>2 giờ</item>
+        <item>3 giờ</item>
+        <item>4 giờ</item>
+    </string-array>
+
+    <string name="app_name">Gogo</string>
+    <string name="app_name_2">Gogo</string>
+    <string name="welcome_to_gogo">Your Health, Our Priority</string>
+    <string name="sign_in_with_google">Continue with Google</string>
+    <string name="sign_in_with_facebook">Login with Facebook</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="signup">Đăng ký</string>
+    <string name="app_logo">Logo ứng dụng</string>
+    <string name="exercise_list_title">Danh sách bài tập</string>
+    <string name="add_exercise">Thêm bài tập</string>
+
+    <string name="welcome_message">Xin chào, %1$s!</string>
+    <string name="sign_in_failed">Đăng nhập thất bại</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+</resources>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#FFFFFF"
+        android:elevation="4dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thêm bài tập"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên bài tập"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_exercise_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loại bài tập"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/spinner_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mô tả"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_exercise_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Năng lượng tiêu thụ (kcal)"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_energy_consumed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="12dp"
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thời gian tiêu chuẩn (phút)"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_standard_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="12dp"
+                android:inputType="number"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Độ khó"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/spinner_difficulty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thiết bị cần thiết"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/edit_equipment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lưu"
+                android:backgroundTint="#007AFF"
+                android:textColor="#FFFFFF"
+                android:padding="12dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
