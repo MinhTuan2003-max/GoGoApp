@@ -20,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/background_gradient"
-            app:navigationIcon="@drawable/ic_back"
             app:iconTint="@color/white"
             app:title="Hồ sơ sức khỏe"
             app:titleTextAppearance="@style/AppBarTitle"

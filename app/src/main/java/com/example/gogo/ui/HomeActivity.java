@@ -209,7 +209,7 @@ public class HomeActivity extends AppCompatActivity {
         notifications.clear();
 
         if (userId != -1) {
-            Cursor cursor = notificationDAO.getLatestUserNotification(userId);
+            Cursor cursor = notificationDAO.getUserNotifications(userId);
             try {
                 while (cursor.moveToNext()) {
                     int id = cursor.getInt(0);

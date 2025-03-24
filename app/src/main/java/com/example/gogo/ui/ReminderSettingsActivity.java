@@ -65,12 +65,10 @@ public class ReminderSettingsActivity extends AppCompatActivity {
     private void loadSavedPreferences() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
-        // Thiết lập trạng thái switch
         waterSwitch.setChecked(prefs.getBoolean(ReminderManager.KEY_WATER_REMINDER_ENABLED, true));
         mealSwitch.setChecked(prefs.getBoolean(ReminderManager.KEY_MEAL_REMINDER_ENABLED, true));
         sleepSwitch.setChecked(prefs.getBoolean(ReminderManager.KEY_SLEEP_REMINDER_ENABLED, true));
 
-        // Thiết lập khoảng thời gian uống nước
         int waterInterval = prefs.getInt(ReminderManager.KEY_WATER_INTERVAL, 120);
         int spinnerPosition = 0;
         switch (waterInterval) {

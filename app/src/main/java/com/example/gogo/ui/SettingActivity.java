@@ -120,7 +120,7 @@ public class SettingActivity extends AppCompatActivity {
         adapter = new SettingOptionAdapter(options, option -> {
             switch (option.getId()) {
                 case 1: // Compare
-                    Intent compareIntent = new Intent(SettingActivity.this, WeightLossActivity.class);
+                    Intent compareIntent = new Intent(SettingActivity.this, WeightGoalSelectionActivity.class);
                     startActivity(compareIntent);
                     break;
                 case 2: // Body Fat

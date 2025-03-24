@@ -40,15 +40,6 @@ public class ViewProfileActivity extends AppCompatActivity {
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(ViewProfileActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-        });
-
         recyclerView = findViewById(R.id.recyclerViewProfile);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
@@ -90,7 +81,6 @@ public class ViewProfileActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (itemId == R.id.nav_profile) {
-                // Đã ở ViewProfileActivity, không cần làm gì
                 return true;
             } else if (itemId == R.id.nav_settings) {
                 startActivity(new Intent(ViewProfileActivity.this, SettingActivity.class));
@@ -100,18 +90,6 @@ public class ViewProfileActivity extends AppCompatActivity {
             return false;
         });
 
-        // Đánh dấu mục hiện tại
         bottomNavigationView.setSelectedItemId(R.id.nav_profile);
-    }
-
-    public void logout() {
-        if (googleSignInClient != null) {
-            googleSignInClient.signOut().addOnCompleteListener(this, task -> {
-                Intent intent = new Intent(ViewProfileActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            });
-        }
     }
 }

@@ -13,6 +13,13 @@
         - Cân nặng hiện tại: [Sẽ cập nhật khi tính toán]
     </string>
 
+    <string name="weight_gain_notes">
+        - Tăng cân an toàn: 0.25-0.5 kg/tuần theo khuyến nghị khoa học.\n
+        - Ưu tiên thực phẩm giàu dinh dưỡng: protein, tinh bột, chất béo lành mạnh.\n
+        - Kết quả chỉ mang tính tham khảo, hãy tham khảo ý kiến bác sĩ trước khi áp dụng.\n
+        - Cân nặng hiện tại: [Sẽ cập nhật khi tính toán]
+    </string>
+
     <string-array name="water_intervals">
         <item>30 phút</item>
         <item>1 giờ</item>

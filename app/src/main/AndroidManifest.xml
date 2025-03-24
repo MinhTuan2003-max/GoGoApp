@@ -23,6 +23,14 @@
             android:value="587504441172-pg3i1k9lcu6uhahff32gncs8dbnqo1d4.apps.googleusercontent.com" />
 
         <activity
+            android:name=".ui.WeightGainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.WeightGoalSelectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
             android:name=".ui.ReminderSettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.GoGo" />
