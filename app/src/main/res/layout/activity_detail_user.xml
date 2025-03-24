@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@drawable/background_gradient"
     tools:context=".ui.ViewProfileActivity">
 
     <!-- Top App Bar with gradient background -->
@@ -19,11 +19,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/background_gradient"
+            android:background="@color/white"
             app:iconTint="@color/white"
             app:title="Hồ sơ sức khỏe"
             app:titleTextAppearance="@style/AppBarTitle"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@color/primary_color" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- RecyclerView to hold all sections -->
