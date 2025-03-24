@@ -24,7 +24,7 @@ public class User {
         this.weight = weight;
         this.createdAt = createdAt;
     }
-
+      
     public User() {}
 
     public int getUserId() {
@@ -107,3 +107,4 @@ public class User {
         this.createdAt = createdAt;
     }
 }
+

@@ -71,7 +71,7 @@
             android:exported="false"
             android:theme="@style/Theme.GoGo" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.SleepActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,7 +79,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".ui.SleepInputActivity" />
+        <activity android:name=".ui.SleepSuggestionActivity" />
+        <activity android:name=".ui.SleepHistoryActivity" />
+        <activity android:name=".ui.WakeUpInputActivity" />
+<!--        <activity android:name=".ui.SleepActivity" />-->
         <service
             android:name=".service.NotificationService"
             android:foregroundServiceType="dataSync"
@@ -92,5 +96,4 @@
 
         <receiver android:name=".service.ReminderReceiver" android:exported="false" />
     </application>
-
 </manifest>

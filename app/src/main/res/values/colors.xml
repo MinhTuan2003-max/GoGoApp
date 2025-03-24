@@ -21,6 +21,7 @@
     <color name="divider">#E0E0E0</color>
     <color name="accent">#FF5722</color>
 
+    <color name="text_get_started">#E3F2FD</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

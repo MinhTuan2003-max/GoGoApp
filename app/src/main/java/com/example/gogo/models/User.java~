@@ -1,0 +1,4 @@
+package com.example.gogo.models;
+
+public class User {
+}

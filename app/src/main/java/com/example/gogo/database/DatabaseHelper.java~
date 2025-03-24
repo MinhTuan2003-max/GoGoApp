@@ -47,6 +47,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             outputStream.flush();
             Log.d(TAG, "Database copied successfully!");
 
+            SQLiteDatabase db = getWritableDatabase();
+            db.execSQL(CREATE_TABLE_SLEEP_RECORDS);
+            db.close();
+            
         } catch (Exception e) {
             Log.e(TAG, "Error copying database: ", e);
         }
@@ -72,3 +76,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return SQLiteDatabase.openDatabase(DATABASE_PATH, null, SQLiteDatabase.OPEN_READWRITE);
     }
 }
+
