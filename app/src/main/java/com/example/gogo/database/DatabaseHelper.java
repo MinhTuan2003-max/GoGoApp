@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -12,10 +13,9 @@ import java.io.OutputStream;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DatabaseHelper";
-    private static final String DATABASE_NAME = "gogoapp.db";
+    private static final String DATABASE_NAME = "gogoapp.sqlite";
     private static final int DATABASE_VERSION = 1;
     private static String DATABASE_PATH;
-
     private final Context context;
 
     public DatabaseHelper(Context context) {
@@ -62,13 +62,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "onUpgrade called, but no changes needed.");
     }
 
-    @Override
-    public SQLiteDatabase getReadableDatabase() {
-        return SQLiteDatabase.openDatabase(DATABASE_PATH, null, SQLiteDatabase.OPEN_READONLY);
-    }
-
-    @Override
-    public SQLiteDatabase getWritableDatabase() {
-        return SQLiteDatabase.openDatabase(DATABASE_PATH, null, SQLiteDatabase.OPEN_READWRITE);
+    public SQLiteDatabase getDatabase(boolean writable) {
+        return SQLiteDatabase.openDatabase(DATABASE_PATH, null,
+                writable ? SQLiteDatabase.OPEN_READWRITE : SQLiteDatabase.OPEN_READONLY);
     }
 }

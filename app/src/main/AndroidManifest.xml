@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +18,58 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GoGo"
         tools:targetApi="35">
+        <meta-data
+            android:name="com.google.android.gms.auth.api.signin"
+            android:value="587504441172-pg3i1k9lcu6uhahff32gncs8dbnqo1d4.apps.googleusercontent.com" />
+
+        <activity
+            android:name=".ui.WeightGainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.WeightGoalSelectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.ReminderSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.BodyFatActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.WeightLossActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.TermsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.AboutUsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.SettingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.UpdateProfileInfoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.ViewProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.CreateProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
@@ -21,6 +79,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.NotificationService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false"
+            android:enabled="true" />
+
+        <receiver
+            android:name=".service.NotificationService$NotificationReceiver"
+            android:exported="false" />
+
+        <receiver android:name=".service.ReminderReceiver" android:exported="false" />
     </application>
 
 </manifest>
