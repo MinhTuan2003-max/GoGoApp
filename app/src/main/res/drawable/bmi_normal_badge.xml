@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- bmi_normal_badge.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/white" />
+    <corners android:radius="16dp" />
+</shape>
+
+    <!-- Create similar files for other BMI categories with their respective colors -->
+    <!-- bmi_underweight_badge.xml -->
+    <!-- bmi_overweight_badge.xml -->
+    <!-- bmi_obese_badge.xml -->

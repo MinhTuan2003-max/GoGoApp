@@ -5,4 +5,15 @@
         <item name="android:backgroundTint">@null</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="TextAppearance.BottomNavigationView" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+    <style name="AppBarTitle" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
