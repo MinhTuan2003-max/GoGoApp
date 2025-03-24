@@ -13,7 +13,7 @@
         android:theme="@style/Theme.GoGo"
         tools:targetApi="35">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.SleepActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +25,7 @@
         <activity android:name=".ui.SleepSuggestionActivity" />
         <activity android:name=".ui.SleepHistoryActivity" />
         <activity android:name=".ui.WakeUpInputActivity" />
+<!--        <activity android:name=".ui.SleepActivity" />-->
 
     </application>
 

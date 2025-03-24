@@ -20,50 +20,43 @@ public class SleepInputActivity extends AppCompatActivity {
     private SleepDao sleepDao;
     private ImageButton btnBack;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_save_history);
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_save_history);
+//
+//        datePicker = findViewById(R.id.date_picker);
+//        sleepTimePicker = findViewById(R.id.sleep_time_picker);
+//        wakeUpTimePicker = findViewById(R.id.wake_up_time_picker);
+//        Button btnSave = findViewById(R.id.btn_save);
+//        btnBack = findViewById(R.id.btn_back);
+//
+//        sleepDao = new SleepDao(this);
+//
+//        btnBack.setOnClickListener(v -> finish());
+//
+//        btnSave.setOnClickListener(v -> saveSleepRecord());
+//    }
 
-        // Khởi tạo các thành phần giao diện
-        datePicker = findViewById(R.id.date_picker);
-        sleepTimePicker = findViewById(R.id.sleep_time_picker);
-        wakeUpTimePicker = findViewById(R.id.wake_up_time_picker);
-        Button btnSave = findViewById(R.id.btn_save);
-        btnBack = findViewById(R.id.btn_back);
-
-        sleepDao = new SleepDao(this);
-
-        // Xử lý sự kiện cho nút "Back"
-        btnBack.setOnClickListener(v -> finish());
-
-        // Xử lý sự kiện cho nút "Lưu thông tin"
-        btnSave.setOnClickListener(v -> saveSleepRecord());
-    }
-
-    private void saveSleepRecord() {
-        // Lấy dữ liệu từ các picker
-        String date = String.format("%02d/%02d/%d",
-                datePicker.getDayOfMonth(), datePicker.getMonth() + 1, datePicker.getYear());
-        String sleepTime = String.format("%02d:%02d",
-                sleepTimePicker.getHour(), sleepTimePicker.getMinute());
-        String wakeUpTime = String.format("%02d:%02d",
-                wakeUpTimePicker.getHour(), wakeUpTimePicker.getMinute());
-        float sleepHours = TimeUtils.calculateSleepHours(sleepTime, wakeUpTime);
-
-        // Tạo và lưu SleepRecord
-        SleepRecord record = new SleepRecord(0, date, sleepTime, wakeUpTime, sleepHours);
-        long result = sleepDao.insertSleepRecord(record); // Lấy kết quả từ insert
-
-        // Kiểm tra xem dữ liệu có được lưu thành công không
-        if (result != -1) {
-            Toast.makeText(this, "Đã lưu thông tin giấc ngủ!", Toast.LENGTH_SHORT).show();
-            // Chuyển sang SleepHistoryActivity
-            Intent intent = new Intent(this, SleepHistoryActivity.class);
-            startActivity(intent);
-            finish(); // Kết thúc activity hiện tại sau khi chuyển
-        } else {
-            Toast.makeText(this, "Lỗi khi lưu thông tin giấc ngủ!", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void saveSleepRecord() {
+//        String date = String.format("%02d/%02d/%d",
+//                datePicker.getDayOfMonth(), datePicker.getMonth() + 1, datePicker.getYear());
+//        String sleepTime = String.format("%02d:%02d",
+//                sleepTimePicker.getHour(), sleepTimePicker.getMinute());
+//        String wakeUpTime = String.format("%02d:%02d",
+//                wakeUpTimePicker.getHour(), wakeUpTimePicker.getMinute());
+//        float sleepHours = TimeUtils.calculateSleepHours(sleepTime, wakeUpTime);
+//
+//        SleepRecord record = new SleepRecord(0, date, sleepTime, wakeUpTime, sleepHours);
+//        long result = sleepDao.insertSleepRecord(record);
+//
+//        if (result != -1) {
+//            Toast.makeText(this, "Đã lưu thông tin giấc ngủ!", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(this, SleepHistoryActivity.class);
+//            startActivity(intent);
+//            finish();
+//        } else {
+//            Toast.makeText(this, "Lỗi khi lưu thông tin giấc ngủ!", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 }

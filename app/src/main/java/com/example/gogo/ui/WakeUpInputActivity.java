@@ -17,26 +17,22 @@ public class WakeUpInputActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wake_up); // Sử dụng layout activity_wake_up.xml
+        setContentView(R.layout.activity_wake_up);
 
-        // Khởi tạo các thành phần giao diện
         timePicker = findViewById(R.id.time_picker);
         btnBack = findViewById(R.id.btn_back);
         btnSubmit = findViewById(R.id.btn_submit);
 
-        // Xử lý sự kiện cho nút "Quay lại"
         btnBack.setOnClickListener(v -> finish());
 
-        // Xử lý sự kiện cho nút "Xác nhận"
         btnSubmit.setOnClickListener(v -> showSleepSuggestions());
     }
 
     private void showSleepSuggestions() {
-        // Lấy giờ thức dậy từ TimePicker
+
         String wakeUpTime = String.format("%02d:%02d",
                 timePicker.getHour(), timePicker.getMinute());
 
-        // Chuyển sang SleepSuggestionActivity và truyền giờ thức dậy
         Intent intent = new Intent(this, SleepSuggestionActivity.class);
         intent.putExtra("wake_up_time", wakeUpTime);
         startActivity(intent);

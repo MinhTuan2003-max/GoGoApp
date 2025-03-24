@@ -2,23 +2,66 @@ package com.example.gogo.models;
 
 public class SleepRecord {
     private int id;
-    private String date;        // Định dạng: "dd/MM/yyyy"
-    private String sleepTime;   // Định dạng: "HH:mm"
-    private String wakeUpTime;  // Định dạng: "HH:mm"
-    private float sleepHours;   // Số giờ ngủ
+    private User user;
+    private String date;
+    private String sleepTime;
+    private String wakeUpTime;
+    private float sleepHours;
 
-    public SleepRecord(int id, String date, String sleepTime, String wakeUpTime, float sleepHours) {
+    public SleepRecord(int id, User user, String date, String sleepTime, String wakeUpTime, float sleepHours) {
         this.id = id;
+        this.user = user;
         this.date = date;
         this.sleepTime = sleepTime;
         this.wakeUpTime = wakeUpTime;
         this.sleepHours = sleepHours;
     }
 
-    // Getters và Setters
-    public int getId() { return id; }
-    public String getDate() { return date; }
-    public String getSleepTime() { return sleepTime; }
-    public String getWakeUpTime() { return wakeUpTime; }
-    public float getSleepHours() { return sleepHours; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getSleepTime() {
+        return sleepTime;
+    }
+
+    public void setSleepTime(String sleepTime) {
+        this.sleepTime = sleepTime;
+    }
+
+    public String getWakeUpTime() {
+        return wakeUpTime;
+    }
+
+    public void setWakeUpTime(String wakeUpTime) {
+        this.wakeUpTime = wakeUpTime;
+    }
+
+    public float getSleepHours() {
+        return sleepHours;
+    }
+
+    public void setSleepHours(float sleepHours) {
+        this.sleepHours = sleepHours;
+    }
 }

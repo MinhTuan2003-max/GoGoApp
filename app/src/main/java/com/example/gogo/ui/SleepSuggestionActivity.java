@@ -13,14 +13,12 @@ public class SleepSuggestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_sleep);
 
-        // Khai báo ImageButton
         ImageButton btnBack = findViewById(R.id.btn_back);
 
-        // Thêm sự kiện click cho nút back
-        btnBack.setOnClickListener(v -> finish());  // finish() sẽ đóng activity hiện tại và quay lại màn hình trước
+        btnBack.setOnClickListener(v -> finish());
 
         String wakeUpTime = getIntent().getStringExtra("wake_up_time");
-        if (wakeUpTime == null) wakeUpTime = "06:00"; // Giá trị mặc định nếu không nhận được
+        if (wakeUpTime == null) wakeUpTime = "06:00";
 
         TextView tvWakeUpTime = findViewById(R.id.tv_wake_up_time);
         TextView tvSuggestion1 = findViewById(R.id.tv_suggestion_1);
