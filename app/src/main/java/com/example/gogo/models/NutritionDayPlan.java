@@ -3,24 +3,28 @@ package com.example.gogo.models;
 import java.util.List;
 
 public class NutritionDayPlan {
-    private String day;
+    private int dayNumber;
     private List<String> breakfast;
     private List<String> lunch;
     private List<String> dinner;
-    private boolean completed;
+    private boolean isCompleted;
+    private int totalCalories; // Thêm biến tổng calo
 
-    public NutritionDayPlan() {
-        this.completed = false; // Mặc định là chưa hoàn thành
+    public NutritionDayPlan(int dayNumber, List<String> breakfast, List<String> lunch, List<String> dinner, boolean isCompleted) {
+        this.dayNumber = dayNumber;
+        this.breakfast = breakfast;
+        this.lunch = lunch;
+        this.dinner = dinner;
+        this.isCompleted = isCompleted;
+        this.totalCalories = 0;
     }
 
-    public String getDay() { return day; }
-    public void setDay(String day) { this.day = day; }
+    public int getDayNumber() { return dayNumber; }
     public List<String> getBreakfast() { return breakfast; }
-    public void setBreakfast(List<String> breakfast) { this.breakfast = breakfast; }
     public List<String> getLunch() { return lunch; }
-    public void setLunch(List<String> lunch) { this.lunch = lunch; }
     public List<String> getDinner() { return dinner; }
-    public void setDinner(List<String> dinner) { this.dinner = dinner; }
-    public boolean isCompleted() { return completed; }
-    public void setCompleted(boolean completed) { this.completed = completed; }
+    public boolean isCompleted() { return isCompleted; }
+    public void setCompleted(boolean completed) { this.isCompleted = completed; }
+    public int getTotalCalories() { return totalCalories; }
+    public void addCalories(int calories) { this.totalCalories += calories; }
 }

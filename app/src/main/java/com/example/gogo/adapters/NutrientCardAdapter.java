@@ -30,7 +30,7 @@ public class NutrientCardAdapter extends RecyclerView.Adapter<NutrientCardAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         DietPlan plan = dietPlans.get(position);
         holder.text1.setText(plan.getPlanName());
-        holder.text2.setText("Completed: " + (plan.isCompleted() ? "Yes" : "No"));
+//        holder.text2.setText("Completed: " + (plan.isCompleted() ? "Yes" : "No"));
     }
 
     @Override

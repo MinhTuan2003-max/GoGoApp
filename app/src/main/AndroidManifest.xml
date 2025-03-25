@@ -25,6 +25,8 @@
         <activity android:name=".ui.NutrientPlanActivity" />
         <activity android:name=".ui.NutrientPlanDetailActivity" />
         <activity android:name=".ui.Nutrient7PlanActivity" />
+        <activity android:name=".ui.Nutrient7PlanSelectedActivity" />
+        <activity android:name=".ui.NutrientCreatePlanActivity" />
     </application>
 
 </manifest>

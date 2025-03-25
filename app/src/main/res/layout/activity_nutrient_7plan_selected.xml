@@ -45,16 +45,18 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kế hoạch ăn uống 7 ngày"
+                android:text="Kế hoạch ăn uống 7 ngày đã chọn"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
@@ -67,20 +69,35 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:clipToPadding="false"
-                android:paddingHorizontal="8dp" />
+                android:paddingHorizontal="8dp"
+                android:visibility="gone" />
 
-            <!-- Button Chọn kế hoạch -->
-            <Button
-                android:id="@+id/selectPlanButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chọn kế hoạch"
-
-                android:textSize="16sp"
-                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:gravity="center"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="#DDAD7B"
-                android:textColor="@android:color/white" />
+                android:visibility="visible">
+
+                <Button
+                    android:id="@+id/suggestPlanButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gợi ý Kế Hoạch"
+                    android:backgroundTint="#DDAD7B"
+                    android:textColor="@android:color/white"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/createPlanButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tạo Kế Hoạch"
+                    android:backgroundTint="#DDAD7B"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
