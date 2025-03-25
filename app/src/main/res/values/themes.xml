@@ -5,5 +5,21 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <style name="TimePickerTheme" parent="Theme.AppCompat.Light">
+        <!-- Màu chữ chính (giờ, phút) -->
+        <item name="android:textColorPrimary">#1F1705</item>
+        <!-- Màu chữ phụ (AM/PM, nhãn) -->
+        <item name="android:textColorSecondary">#B0BEC5</item>
+        <!-- Màu điểm nhấn (vòng chọn, nút) -->
+        <item name="colorAccent">#FFEB3B</item>
+        <!-- Màu nền của TimePicker: trong suốt -->
+        <item name="android:background">@android:color/transparent</item>
+        <!-- Màu của các đường phân cách -->
+        <item name="android:divider">@android:color/transparent</item>
+        <!-- Màu của các số không được chọn -->
+        <item name="android:textColor">#B0BEC5</item>
+        <!-- Màu vòng chọn -->
+    </style>
+
     <style name="Theme.GoGo" parent="Base.Theme.GoGo" />
 </resources>
