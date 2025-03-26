@@ -4,55 +4,60 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#2E3B3E"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+android:padding="16dp"
+android:background="#1C2526">
+
+<TextView
+    android:id="@+id/tv_date"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="01/01/2025"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    android:textColor="#FFFFFF" />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_sleep_time"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_weight="1"
+        android:text="Đi ngủ: 22:30"
+        android:textColor="#B0BEC5" /> <!-- Light gray for secondary text -->
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="01/01/2025"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tv_wake_up_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Thức dậy: 06:00"
+        android:textColor="#B0BEC5" /> <!-- Light gray for secondary text -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+</LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_sleep_time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Đi ngủ: 22:30" />
+<TextView
+    android:id="@+id/tv_sleep_hours"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="7.5 giờ"
+    android:textColor="#FFEB3B"
+    android:textSize="18sp"
+    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_wake_up_time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Thức dậy: 06:00" />
+</LinearLayout>
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_sleep_hours"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="7.5 giờ"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>

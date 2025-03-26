@@ -78,4 +78,5 @@
     <!-- Avatar Background -->
     <color name="avatar_background">#BBDEFB</color>
     <color name="back_color" >#2A9D8F</color>
+    <color name="yellow">#FFEB3B</color>
 </resources>

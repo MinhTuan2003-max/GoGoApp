@@ -8,10 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.gogo.R;
+import com.example.gogo.ui.SettingActivity;
+import com.example.gogo.ui.SleepActivity;
+import com.example.gogo.ui.ViewProfileActivity;
+
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder> {
     private String[] functions = {"Quản lý giấc ngủ", "Quản lý dinh dưỡng", "Quản lý vận động"};
     private String[] descriptions = {
@@ -19,12 +25,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             "Ghi lại chế độ ăn uống và lượng dinh dưỡng",
             "Lưu lại các bài tập và hoạt động thể chất"
     };
+    private int userId = -1;
+
 
     private int[] icons = {R.drawable.ic_sleep, R.drawable.ic_nutrition, R.drawable.ic_exercise};
     private Context context;
 
     public HomeAdapter(Context context) {
         this.context = context;
+    }
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @NonNull
@@ -45,18 +56,20 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
                 Intent intent;
                 switch (position) {
                     case 0:
-//                        intent = new Intent(context, SleepManageActivity.class);
+                        intent = new Intent(context, SleepActivity.class);
+                        intent.putExtra("USER_ID", userId);
+                        context.startActivity(intent);
                         break;
                     case 1:
-//                        intent = new Intent(context, NutritionManageActivity.class);
+                        intent = new Intent(context, ViewProfileActivity.class);
                         break;
                     case 2:
-//                        intent = new Intent(context, SportManageActivity.class);
+                        intent = new Intent(context, SettingActivity.class);
                         break;
                     default:
                         return;
                 }
-//                context.startActivity(intent);
+                context.startActivity(intent);
             }
         });
     }

@@ -20,7 +20,7 @@
         tools:targetApi="35">
         <meta-data
             android:name="com.google.android.gms.auth.api.signin"
-            android:value="587504441172-pg3i1k9lcu6uhahff32gncs8dbnqo1d4.apps.googleusercontent.com" />
+            android:value="50483907710-6nk5kev4p989265nsm4f8opiiinc5v9l.apps.googleusercontent.com" />
 
         <activity
             android:name=".ui.WeightGainActivity"
@@ -71,7 +71,7 @@
             android:exported="false"
             android:theme="@style/Theme.GoGo" />
         <activity
-            android:name=".ui.SleepActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -83,7 +83,9 @@
         <activity android:name=".ui.SleepSuggestionActivity" />
         <activity android:name=".ui.SleepHistoryActivity" />
         <activity android:name=".ui.WakeUpInputActivity" />
-<!--        <activity android:name=".ui.SleepActivity" />-->
+        <activity android:name=".ui.SleepActivity" />
+        <activity android:name=".ui.SleepStatsActivity" /> <!-- Thêm khai báo cho SleepStatsActivity -->
+
         <service
             android:name=".service.NotificationService"
             android:foregroundServiceType="dataSync"
