@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/card_background">
 
-    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -34,7 +33,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Card chứa kết quả -->
     <androidx.cardview.widget.CardView
         android:id="@+id/resultCard"
         android:layout_width="0dp"
@@ -72,7 +70,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Card chứa biểu đồ -->
     <androidx.cardview.widget.CardView
         android:id="@+id/chartCard"
         android:layout_width="0dp"

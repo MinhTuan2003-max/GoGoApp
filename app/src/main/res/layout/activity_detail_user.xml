@@ -8,7 +8,6 @@
     android:background="@drawable/background_gradient"
     tools:context=".ui.ViewProfileActivity">
 
-    <!-- Top App Bar with gradient background -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -26,7 +25,6 @@
             app:titleTextColor="@color/primary_color" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- RecyclerView to hold all sections -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewProfile"
         android:layout_width="match_parent"

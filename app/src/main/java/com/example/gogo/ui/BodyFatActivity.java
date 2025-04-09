@@ -70,7 +70,6 @@ public class BodyFatActivity extends AppCompatActivity {
     private void calculateAndDisplayBFP(User user) {
         double bfp = BodyFatUtils.calculateBFP(user);
 
-        // Hiển thị BFP
         DecimalFormat df = new DecimalFormat("#.#");
         resultTextView.setText("Tỷ lệ mỡ cơ thể (BFP): " + df.format(bfp) + "%");
 

@@ -16,7 +16,6 @@ public class ReminderManager {
     public static final String KEY_MEAL_REMINDER_ENABLED = "meal_reminder_enabled";
     public static final String KEY_SLEEP_REMINDER_ENABLED = "sleep_reminder_enabled";
 
-    // Request codes for pending intents
     public static final int WATER_REMINDER_REQUEST_CODE = 1001;
     public static final int BREAKFAST_REMINDER_REQUEST_CODE = 1002;
     public static final int LUNCH_REMINDER_REQUEST_CODE = 1003;
@@ -58,23 +57,21 @@ public class ReminderManager {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        // Thiết lập thông báo đầu tiên sau 5 phút từ thời điểm hiện tại
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, 5);
 
-        // Thiết lập thông báo lặp lại
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(),
-                    intervalMinutes * 60 * 1000, // chuyển phút thành milli giây
+                    intervalMinutes * 60 * 1000,
                     pendingIntent
             );
         } else {
             alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(),
-                    intervalMinutes * 60 * 1000, // chuyển phút thành milli giây
+                    intervalMinutes * 60 * 1000,
                     pendingIntent
             );
         }
@@ -89,12 +86,10 @@ public class ReminderManager {
             return;
         }
 
-        // Lấy thời gian từ SharedPreferences
         String breakfastTime = prefs.getString(KEY_BREAKFAST_TIME, DEFAULT_BREAKFAST_TIME);
         String lunchTime = prefs.getString(KEY_LUNCH_TIME, DEFAULT_LUNCH_TIME);
         String dinnerTime = prefs.getString(KEY_DINNER_TIME, DEFAULT_DINNER_TIME);
 
-        // Thiết lập thông báo ăn sáng
         scheduleSpecificMealReminder(
                 context,
                 breakfastTime,
@@ -103,7 +98,6 @@ public class ReminderManager {
                 "Ăn sáng đầy đủ để có nguồn năng lượng cho cả ngày!"
         );
 
-        // Thiết lập thông báo ăn trưa
         scheduleSpecificMealReminder(
                 context,
                 lunchTime,
@@ -112,7 +106,6 @@ public class ReminderManager {
                 "Dừng công việc và ăn trưa đi nào!"
         );
 
-        // Thiết lập thông báo ăn tối
         scheduleSpecificMealReminder(
                 context,
                 dinnerTime,
@@ -146,7 +139,6 @@ public class ReminderManager {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
 
-        // Thiết lập thông báo
         Intent intent = new Intent(context, ReminderReceiver.class);
         intent.putExtra("type", "sleep");
         intent.putExtra("title", "Đã đến giờ đi ngủ");
@@ -184,7 +176,6 @@ public class ReminderManager {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
 
-        // Thiết lập thông báo
         Intent intent = new Intent(context, ReminderReceiver.class);
         intent.putExtra("type", "meal");
         intent.putExtra("title", title);
@@ -222,7 +213,6 @@ public class ReminderManager {
     public static void cancelMealReminders(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        // Hủy thông báo ăn sáng
         Intent breakfastIntent = new Intent(context, ReminderReceiver.class);
         PendingIntent breakfastPI = PendingIntent.getBroadcast(
                 context,
@@ -232,7 +222,6 @@ public class ReminderManager {
         );
         alarmManager.cancel(breakfastPI);
 
-        // Hủy thông báo ăn trưa
         Intent lunchIntent = new Intent(context, ReminderReceiver.class);
         PendingIntent lunchPI = PendingIntent.getBroadcast(
                 context,
@@ -242,7 +231,6 @@ public class ReminderManager {
         );
         alarmManager.cancel(lunchPI);
 
-        // Hủy thông báo ăn tối
         Intent dinnerIntent = new Intent(context, ReminderReceiver.class);
         PendingIntent dinnerPI = PendingIntent.getBroadcast(
                 context,

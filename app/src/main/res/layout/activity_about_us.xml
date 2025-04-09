@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!-- Container cho nội dung phía trên với padding -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Nút quay lại -->
         <ImageView
             android:id="@+id/btnBack"
             android:layout_width="45dp"
@@ -27,7 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Hình ảnh chính -->
         <ImageView
             android:id="@+id/mainImage"
             android:layout_width="80dp"
@@ -39,7 +36,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
-        <!-- Tiêu đề -->
         <TextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
@@ -52,7 +48,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mainImage" />
 
-        <!-- Đường kẻ ngang phân chia -->
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
@@ -62,7 +57,6 @@
             android:background="@android:color/darker_gray"
             app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
-        <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -73,7 +67,6 @@
             android:paddingBottom="16dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- BottomNavigationView -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"

@@ -39,9 +39,8 @@ public class CreateProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        // Initialize DatabaseHelper and AccountDAO
         dbHelper = new DatabaseHelper(this);
-        accountDAO = new AccountDAO(dbHelper); // Fix: Initialize accountDAO here
+        accountDAO = new AccountDAO(dbHelper);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -53,15 +52,18 @@ public class CreateProfileActivity extends AppCompatActivity {
             googleId = account.getId();
             User user = accountDAO.getUserByGoogleId(googleId);
             if (user != null && isAdditionalInfoFilled(user)) {
-                // Additional info is complete, go to HomeActivity
                 Intent intent = new Intent(this, HomeActivity.class);
+                intent.putExtra("USER_ID", user.getUserId());
+                intent.putExtra("GOOGLE_ID", googleId);
+                intent.putExtra("IS_ADMIN", user.isAdmin());
                 startActivity(intent);
                 finish();
                 return;
             }
-            // If info is incomplete or user is new, save and set up RecyclerView
-            saveUserToDatabase(account);
-            setupRecyclerView(account);
+            user = saveUserToDatabase(account);
+            if (user != null) {
+                setupRecyclerView(user);
+            }
         } else {
             signIn();
         }
@@ -80,8 +82,10 @@ public class CreateProfileActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                saveUserToDatabase(account);
-                setupRecyclerView(account);
+                User user = saveUserToDatabase(account);
+                if (user != null) {
+                    setupRecyclerView(user);
+                }
             } catch (ApiException e) {
                 Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
                 Toast.makeText(this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
@@ -95,10 +99,19 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         User user = accountDAO.getUserByGoogleId(googleId);
         if (user == null) {
-            // If user doesn’t exist, insert new
-            user = new User(0, account.getId(), account.getDisplayName(), account.getEmail(),
-                    account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null,
-                    0, null, 0.0f, 0.0f, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            user = new User(
+                    0,
+                    account.getId(),
+                    account.getDisplayName(),
+                    account.getEmail(),
+                    account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "default_url",
+                    0,
+                    null,
+                    0.0f,
+                    0.0f,
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
+                    "minhtuanha2829@gmail.com".equalsIgnoreCase(account.getEmail())
+            );
             boolean success = accountDAO.insertUser(
                     user.getGoogleId(),
                     user.getFullName(),
@@ -110,6 +123,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                 return null;
             }
             Log.d(TAG, "User save result: success");
+            user = accountDAO.getUserByGoogleId(googleId);
         } else {
             Log.d(TAG, "User already exists with GoogleID: " + googleId);
             Toast.makeText(this, "Chào mừng trở lại", Toast.LENGTH_SHORT).show();
@@ -117,23 +131,16 @@ public class CreateProfileActivity extends AppCompatActivity {
         return user;
     }
 
-    private void setupRecyclerView(GoogleSignInAccount account) {
+    private void setupRecyclerView(User user) {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        User user = accountDAO.getUserByGoogleId(account.getId());
-        if (user == null) {
-            user = new User(0, account.getId(), account.getDisplayName(), account.getEmail(),
-                    account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null,
-                    0, null, 0.0f, 0.0f, new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-        }
 
         adapter = new UserInfoAdapter(this, user);
         recyclerView.setAdapter(adapter);
     }
 
     private boolean isAdditionalInfoFilled(User user) {
-        return user.getAge() > 0 && user.getGender() != null && user.getGender().trim().length() > 0 &&
+        return user.getAge() > 0 && user.getGender() != null && !user.getGender().trim().isEmpty() &&
                 user.getHeight() > 0.0f && user.getWeight() > 0.0f;
     }
 

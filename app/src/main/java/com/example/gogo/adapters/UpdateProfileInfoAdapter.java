@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gogo.R;
 import com.example.gogo.models.User;
-import com.example.gogo.respository.HealthRepository;
+import com.example.gogo.repository.HealthRepository;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -52,13 +52,13 @@ public class UpdateProfileInfoAdapter extends RecyclerView.Adapter<UpdateProfile
 
     @Override
     public int getItemCount() {
-        return 1; // Chỉ có 1 item
+        return 1;
     }
 
 
     class UpdateProfileInfoViewHolder extends RecyclerView.ViewHolder {
         TextInputEditText editName, editHeight, editWeight;
-        NumberPicker dayPicker, monthPicker, yearPicker; // Sửa thành NumberPicker
+        NumberPicker dayPicker, monthPicker, yearPicker;
         MaterialAutoCompleteTextView dropdownGender;
         MaterialButton buttonSave;
         UpdateProfileInfoViewHolder(@NonNull View itemView) {
@@ -66,13 +66,12 @@ public class UpdateProfileInfoAdapter extends RecyclerView.Adapter<UpdateProfile
             editName = itemView.findViewById(R.id.editName);
             editHeight = itemView.findViewById(R.id.editHeight);
             editWeight = itemView.findViewById(R.id.editWeight);
-            dayPicker = itemView.findViewById(R.id.dayPicker); // Ánh xạ NumberPicker
-            monthPicker = itemView.findViewById(R.id.monthPicker); // Ánh xạ NumberPicker
-            yearPicker = itemView.findViewById(R.id.yearPicker); // Ánh xạ NumberPicker
+            dayPicker = itemView.findViewById(R.id.dayPicker);
+            monthPicker = itemView.findViewById(R.id.monthPicker);
+            yearPicker = itemView.findViewById(R.id.yearPicker);
             dropdownGender = itemView.findViewById(R.id.dropdownGender);
             buttonSave = itemView.findViewById(R.id.buttonSave);
 
-            // Khởi tạo NumberPicker
             dayPicker.setMinValue(1);
             dayPicker.setMaxValue(31);
             monthPicker.setMinValue(1);
@@ -80,7 +79,6 @@ public class UpdateProfileInfoAdapter extends RecyclerView.Adapter<UpdateProfile
             yearPicker.setMinValue(1900);
             yearPicker.setMaxValue(2025);
 
-            // Khởi tạo dropdown cho gender
             String[] genderOptions = {"Nam", "Nữ", "Khác"};
             ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, genderOptions);
             dropdownGender.setAdapter(genderAdapter);
@@ -123,7 +121,7 @@ public class UpdateProfileInfoAdapter extends RecyclerView.Adapter<UpdateProfile
             newHeight = Float.parseFloat(holder.editHeight.getText().toString());
             newWeight = Float.parseFloat(holder.editWeight.getText().toString());
         } catch (NumberFormatException e) {
-            return false; // Nếu người dùng nhập sai định dạng, không cho phép lưu
+            return false;
         }
 
         int newDay = holder.dayPicker.getValue();

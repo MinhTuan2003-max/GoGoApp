@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -29,7 +28,6 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         Log.d(TAG, "Reminder received: " + type + " - " + title);
 
-        // Tạo Intent để mở ứng dụng khi nhấn vào thông báo
         Intent openAppIntent = new Intent(context, HomeActivity.class);
         openAppIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         openAppIntent.putExtra("FROM_NOTIFICATION", true);
@@ -41,12 +39,10 @@ public class ReminderReceiver extends BroadcastReceiver {
                 PendingIntent.FLAG_IMMUTABLE
         );
 
-        // Tạo âm thanh thông báo
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        // Xây dựng thông báo
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification) // Chắc chắn tạo biểu tượng thông báo trong drawable
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
@@ -54,7 +50,6 @@ public class ReminderReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent);
 
-        // Thêm các style khác nhau dựa trên loại thông báo
         if ("water".equals(type)) {
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message + " Uống nước thường xuyên giúp cơ thể khỏe mạnh và tăng cường trao đổi chất."));
@@ -66,14 +61,11 @@ public class ReminderReceiver extends BroadcastReceiver {
                     .bigText(message + " Ngủ đủ giấc giúp bạn tỉnh táo và tăng năng suất làm việc cho ngày mai."));
         }
 
-        // Lấy dịch vụ thông báo
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Hiển thị thông báo
-        int notificationId = new Random().nextInt(1000); // ID ngẫu nhiên cho mỗi thông báo
+        int notificationId = new Random().nextInt(1000);
         notificationManager.notify(notificationId, notificationBuilder.build());
 
-        // Nếu cần thiết, lên lịch lại cho thông báo tiếp theo
         if ("water".equals(type)) {
             ReminderManager.scheduleWaterReminders(context);
         }

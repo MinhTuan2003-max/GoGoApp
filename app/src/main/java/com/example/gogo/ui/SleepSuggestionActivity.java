@@ -1,11 +1,15 @@
 package com.example.gogo.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageButton;  // Thêm import này
+import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.gogo.R;
 import com.example.gogo.utils.TimeUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SleepSuggestionActivity extends AppCompatActivity {
     @Override
@@ -32,5 +36,28 @@ public class SleepSuggestionActivity extends AppCompatActivity {
                 TimeUtils.calculateSleepTime(wakeUpTime, 9f));
         tvSuggestion3.setText("Nếu bạn muốn ngủ 10.5 giờ, hãy đi ngủ lúc: " +
                 TimeUtils.calculateSleepTime(wakeUpTime, 10.5f));
+
+        setupBottomNavigation();
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(SleepSuggestionActivity.this, HomeActivity.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(SleepSuggestionActivity.this, ViewProfileActivity.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_settings) {
+                startActivity(new Intent(SleepSuggestionActivity.this, SettingActivity.class));
+                finish();
+                return true;
+            }
+            return false;
+        });
     }
 }

@@ -42,7 +42,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
 
-    <!-- Title Text -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -55,7 +54,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Subtitle Text -->
     <TextView
         android:id="@+id/tvSubtitle"
         android:layout_width="0dp"
@@ -70,7 +68,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-    <!-- Container for Buttons -->
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -90,7 +87,6 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Weight Loss Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWeightLoss"
                 android:layout_width="match_parent"
@@ -106,7 +102,6 @@
                 app:iconPadding="8dp"
                 app:iconTint="@color/white" />
 
-            <!-- Weight Gain Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWeightGain"
                 android:layout_width="match_parent"

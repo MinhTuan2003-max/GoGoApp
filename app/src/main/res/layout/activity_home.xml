@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="#F5F7FA">
 
-    <!-- Header section -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -14,7 +13,6 @@
         android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- User info section -->
         <LinearLayout
             android:id="@+id/user_info"
             android:layout_width="wrap_content"
@@ -57,7 +55,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Notification icon -->
         <ImageView
             android:id="@+id/notification_icon"
             android:layout_width="40dp"
@@ -70,7 +67,6 @@
             app:tint="#FFFFFF" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Image Slider -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/slider_container"
         android:layout_width="match_parent"
@@ -106,7 +102,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Information card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/info_card"
         android:layout_width="match_parent"
@@ -160,7 +155,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Date navigation tabs -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/date_tabs"
         android:layout_width="match_parent"
@@ -181,8 +175,6 @@
             android:text="Danh mục quản lí sức khỏe" />
     </com.google.android.material.tabs.TabLayout>
 
-
-    <!-- Medications list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_medications"
         android:layout_width="match_parent"
@@ -203,5 +195,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
+    <LinearLayout
+        android:id="@+id/admin_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/light_gray"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view_medications"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Admin Panel"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/admin_manage_users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manage Users (Admin Only)"
+            android:textSize="16sp"
+            android:textColor="@color/primary_color"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

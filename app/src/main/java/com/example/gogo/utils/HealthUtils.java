@@ -34,7 +34,7 @@ public class HealthUtils {
             case "very active":
                 multiplier = 1.9f;
                 break;
-            default: // default
+            default:
                 multiplier = 1.2f;
                 break;
         }

@@ -12,7 +12,9 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
+
 import com.example.gogo.database.DatabaseHelper;
 import com.example.gogo.database.NotificationDAO;
 import com.example.gogo.ui.HomeActivity;
@@ -99,7 +101,6 @@ public class NotificationService extends Service {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this, notificationId, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-            // Check if exact alarms can be scheduled (Android 12+)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (alarmManager.canScheduleExactAlarms()) {
                     try {
@@ -112,13 +113,10 @@ public class NotificationService extends Service {
                         Log.d("NotificationService", "Falling back to inexact alarm for: " + message);
                     }
                 } else {
-                    // Fallback to inexact alarm if exact alarms are not allowed
                     alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     Log.w("NotificationService", "Exact alarms not allowed, using inexact alarm for: " + message);
-                    // Optionally notify user to enable permission in settings
                 }
             } else {
-                // For older versions, directly set exact alarm
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 Log.d("NotificationService", "Scheduled exact notification: " + message + " at " + notifyTime);
             }

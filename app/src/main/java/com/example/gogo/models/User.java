@@ -11,8 +11,9 @@ public class User {
     private float height;
     private float weight;
     private String createdAt;
+    private boolean isAdmin;
 
-    public User(int userId, String googleId, String fullName, String email, String profileImageUrl, int age, String gender, float height, float weight, String createdAt) {
+    public User(int userId, String googleId, String fullName, String email, String profileImageUrl, int age, String gender, float height, float weight, String createdAt, boolean isAdmin) {
         this.userId = userId;
         this.googleId = googleId;
         this.fullName = fullName;
@@ -23,9 +24,8 @@ public class User {
         this.height = height;
         this.weight = weight;
         this.createdAt = createdAt;
+        this.isAdmin = isAdmin;
     }
-      
-    public User() {}
 
     public int getUserId() {
         return userId;
@@ -106,5 +106,12 @@ public class User {
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
-}
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+}

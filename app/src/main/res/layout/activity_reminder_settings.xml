@@ -82,7 +82,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Cài đặt nhắc nhở ăn cơm -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -223,7 +222,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Button lưu cài đặt -->
         <Button
             android:id="@+id/button_save"
             android:layout_width="match_parent"

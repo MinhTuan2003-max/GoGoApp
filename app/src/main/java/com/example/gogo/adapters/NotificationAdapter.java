@@ -42,7 +42,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.container.removeAllViews();
 
-        // Nội dung thông báo
         TextView messageText = new TextView(holder.container.getContext());
         messageText.setText(item.getMessage());
         messageText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -64,7 +63,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
         holder.container.addView(messageText);
 
-        // Thời gian
         if (!item.getNotifyTime().isEmpty()) {
             TextView timeText = new TextView(holder.container.getContext());
             timeText.setText(item.getNotifyTime());

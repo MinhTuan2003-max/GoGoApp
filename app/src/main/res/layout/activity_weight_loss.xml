@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_light">
 
-    <!-- Header với gradient background -->
     <androidx.cardview.widget.CardView
         android:id="@+id/headerCard"
         android:layout_width="match_parent"
@@ -59,7 +58,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Container cho nội dung -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -72,7 +70,6 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <!-- Card cho input -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/inputCard"
                 android:layout_width="match_parent"
@@ -161,7 +158,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Card cho biểu đồ -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/chartCard"
                 android:layout_width="match_parent"
@@ -211,7 +207,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Card cho ghi chú -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/notesCard"
                 android:layout_width="match_parent"
@@ -280,7 +275,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- BottomNavigationView -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"

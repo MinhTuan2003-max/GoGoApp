@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.gogo.models.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AccountDAO {
     private final DatabaseHelper databaseHelper;
 
@@ -33,6 +36,11 @@ public class AccountDAO {
             values.put("FullName", fullName);
             values.put("Email", email);
             values.put("ProfileImageUrl", profileImageUrl);
+            values.put("IsAdmin", "minhtuanha2829@gmail.com".equalsIgnoreCase(email) ? 1 : 0);
+
+            if ("minhtuanha2829@gmail.com".equalsIgnoreCase(email)) {
+                db.execSQL("UPDATE Users SET IsAdmin = 0 WHERE Email != ?", new String[]{email});
+            }
 
             long result = db.insertWithOnConflict("Users", null, values, SQLiteDatabase.CONFLICT_REPLACE);
             return result != -1;
@@ -57,7 +65,8 @@ public class AccountDAO {
                         cursor.getString(cursor.getColumnIndexOrThrow("Gender")),
                         cursor.getFloat(cursor.getColumnIndexOrThrow("Height")),
                         cursor.getFloat(cursor.getColumnIndexOrThrow("Weight")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("CreatedAt"))
+                        cursor.getString(cursor.getColumnIndexOrThrow("CreatedAt")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("IsAdmin")) == 1
                 );
             }
             cursor.close();
@@ -84,7 +93,7 @@ public class AccountDAO {
     }
 
     public synchronized boolean updateUserDataForFullName(String googleId, int age, String gender, float height, float weight, String fullName) {
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        SQLiteDatabase db = databaseHelper.getDatabase(true);
         try {
             ContentValues values = new ContentValues();
             values.put("Age", age);
@@ -115,21 +124,22 @@ public class AccountDAO {
     }
 
     public User getUserById(int userId) {
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        SQLiteDatabase db = databaseHelper.getDatabase(false);
         Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE UserID = ?", new String[]{String.valueOf(userId)});
         try {
             if (cursor.moveToFirst()) {
                 return new User(
-                        cursor.getInt(0), // UserID
-                        cursor.getString(1), // GoogleID
-                        cursor.getString(2), // FullName
-                        cursor.getString(3), // Email
-                        cursor.getString(4), // ProfileImageUrl
-                        cursor.isNull(5) ? null : cursor.getInt(5), // Age
-                        cursor.getString(6), // Gender
-                        cursor.isNull(7) ? null : cursor.getFloat(7), // Height
-                        cursor.isNull(8) ? null : cursor.getFloat(8), // Weight
-                        cursor.getString(9)  // CreatedAt
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.isNull(5) ? 0 : cursor.getInt(5),
+                        cursor.getString(6),
+                        cursor.isNull(7) ? 0 : cursor.getFloat(7),
+                        cursor.isNull(8) ? 0 : cursor.getFloat(8),
+                        cursor.getString(9),
+                        cursor.getInt(10) == 1
                 );
             }
             return null; // User not found
@@ -137,5 +147,48 @@ public class AccountDAO {
             cursor.close();
             db.close();
         }
+    }
+
+    public synchronized List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        SQLiteDatabase db = databaseHelper.getDatabase(false);
+        try {
+            Cursor cursor = db.rawQuery("SELECT * FROM Users", null);
+            while (cursor.moveToNext()) {
+                users.add(new User(
+                        cursor.getInt(cursor.getColumnIndexOrThrow("UserID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("GoogleID")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("FullName")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("Email")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("ProfileImageUrl")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("Age")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("Gender")),
+                        cursor.getFloat(cursor.getColumnIndexOrThrow("Height")),
+                        cursor.getFloat(cursor.getColumnIndexOrThrow("Weight")),
+                        cursor.getString(cursor.getColumnIndexOrThrow("CreatedAt")),
+                        cursor.getInt(cursor.getColumnIndexOrThrow("IsAdmin")) == 1
+                ));
+            }
+            cursor.close();
+        } finally {
+            db.close();
+        }
+        return users;
+    }
+
+    public boolean deleteUser(int userId) {
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        int rowsDeleted = db.delete("Users", "UserID = ?", new String[]{String.valueOf(userId)});
+        db.close();
+        return rowsDeleted > 0;
+    }
+
+    public boolean updateAdminStatus(int userId, boolean isAdmin) {
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("IsAdmin", isAdmin ? 1 : 0);
+        int rowsUpdated = db.update("Users", values, "UserID = ?", new String[]{String.valueOf(userId)});
+        db.close();
+        return rowsUpdated > 0;
     }
 }

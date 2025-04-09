@@ -20,8 +20,12 @@
         tools:targetApi="35">
         <meta-data
             android:name="com.google.android.gms.auth.api.signin"
-            android:value="587504441172-pg3i1k9lcu6uhahff32gncs8dbnqo1d4.apps.googleusercontent.com" />
+            android:value="355046832272-65t80vb3l34ocnif6dtk636abls0vve8.apps.googleusercontent.com" />
 
+        <activity
+            android:name=".ui.ManageUsersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
         <activity
             android:name=".ui.WeightGainActivity"
             android:exported="false"
@@ -71,7 +75,7 @@
             android:exported="false"
             android:theme="@style/Theme.GoGo" />
         <activity
-            android:name=".ui.SleepActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -83,7 +87,54 @@
         <activity android:name=".ui.SleepSuggestionActivity" />
         <activity android:name=".ui.SleepHistoryActivity" />
         <activity android:name=".ui.WakeUpInputActivity" />
-<!--        <activity android:name=".ui.SleepActivity" />-->
+        <activity android:name=".ui.SleepActivity" />
+        <activity android:name=".ui.SleepStatsActivity" />
+
+        <activity
+            android:name=".activities.HealthMenuActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".activities.ExerciseAddActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".activities.ExerciseEditActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".activities.ExerciseListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".activities.ExercisePlanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".activities.ExercisePlanDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".activities.ExerciseStatsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".activities.SuggestPlanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+        <activity
+            android:name=".ui.AddFoodActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GoGo" />
+
+        <activity android:name=".ui.NutrientStartedActivity"/>
+        <activity android:name=".ui.NutrientSelectActivity" />
+        <activity android:name=".ui.NutrientPlanActivity" />
+        <activity android:name=".ui.NutrientPlanDetailActivity" />
+        <activity android:name=".ui.Nutrient7PlanActivity" />
+        <activity android:name=".ui.Nutrient7PlanSelectedActivity" />
+        <activity android:name=".ui.NutrientCreatePlanActivity" />
+
         <service
             android:name=".service.NotificationService"
             android:foregroundServiceType="dataSync"

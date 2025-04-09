@@ -8,10 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.gogo.R;
+import com.example.gogo.activities.HealthMenuActivity;
+import com.example.gogo.ui.NutrientStartedActivity;
+import com.example.gogo.ui.SleepActivity;
+
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder> {
     private String[] functions = {"Quản lý giấc ngủ", "Quản lý dinh dưỡng", "Quản lý vận động"};
     private String[] descriptions = {
@@ -19,9 +25,22 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             "Ghi lại chế độ ăn uống và lượng dinh dưỡng",
             "Lưu lại các bài tập và hoạt động thể chất"
     };
-
     private int[] icons = {R.drawable.ic_sleep, R.drawable.ic_nutrition, R.drawable.ic_exercise};
     private Context context;
+    private int userId;
+
+    private boolean isAdmin;
+
+    public HomeAdapter(Context context, int userId, boolean isAdmin) {
+        this.context = context;
+        this.userId = userId;
+        this.isAdmin = isAdmin;
+    }
+
+    public HomeAdapter(Context context, int userId) {
+        this.context = context;
+        this.userId = userId;
+    }
 
     public HomeAdapter(Context context) {
         this.context = context;
@@ -39,28 +58,34 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         holder.functionText.setText(functions[position]);
         holder.descriptionText.setText(descriptions[position]);
         holder.iconView.setImageResource(icons[position]);
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+        if (position == 2 && isAdmin) {
+            holder.cardView.setEnabled(false);
+            holder.cardView.setAlpha(0.5f);
+        } else {
+            holder.cardView.setEnabled(true);
+            holder.cardView.setAlpha(1.0f);
+            holder.cardView.setOnClickListener(v -> {
                 Intent intent;
                 switch (position) {
                     case 0:
-//                        intent = new Intent(context, SleepManageActivity.class);
+                        intent = new Intent(context, SleepActivity.class);
                         break;
                     case 1:
-//                        intent = new Intent(context, NutritionManageActivity.class);
+                        intent = new Intent(context, NutrientStartedActivity.class);
                         break;
                     case 2:
-//                        intent = new Intent(context, SportManageActivity.class);
+                        intent = new Intent(context, HealthMenuActivity.class);
                         break;
                     default:
                         return;
                 }
-//                context.startActivity(intent);
-            }
-        });
+                intent.putExtra("USER_ID", userId);
+                intent.putExtra("IS_ADMIN", isAdmin);
+                context.startActivity(intent);
+            });
+        }
     }
-
     @Override
     public int getItemCount() {
         return functions.length;

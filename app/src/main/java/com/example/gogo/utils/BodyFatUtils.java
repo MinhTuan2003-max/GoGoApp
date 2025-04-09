@@ -54,7 +54,6 @@ public class BodyFatUtils {
             result.put("status", "normal");
             result.put("message", "Tỷ lệ mỡ cơ thể của bạn ở mức bình thường. Tiếp tục duy trì lối sống lành mạnh!");
         } else if (bfp > bfpHigh) {
-            // BFP cao (béo phì)
             result.put("status", "high");
             result.put("message", "Tỷ lệ mỡ cơ thể cao! Nguy cơ mắc bệnh:");
             Map<String, Float> risks = new HashMap<>();

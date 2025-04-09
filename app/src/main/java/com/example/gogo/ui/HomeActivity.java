@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.example.gogo.R;
 import com.example.gogo.adapters.HomeAdapter;
 import com.example.gogo.adapters.NotificationAdapter;
@@ -44,13 +45,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.bumptech.glide.Glide;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class HomeActivity extends AppCompatActivity {
     private ImageView avatarImageView;
@@ -74,6 +71,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView notificationBackdrop;
     private boolean isNotificationVisible = false;
     private int userId = -1;
+    private boolean isAdmin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +94,9 @@ public class HomeActivity extends AppCompatActivity {
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build());
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("USER_ID")) {
+        if (intent != null) {
             userId = intent.getIntExtra("USER_ID", -1);
+            isAdmin = intent.getBooleanExtra("IS_ADMIN", false);
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -121,6 +120,13 @@ public class HomeActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, NotificationService.class);
         serviceIntent.putExtra("userId", userId);
         startService(serviceIntent);
+
+        if (isAdmin) {
+            Intent adminIntent = new Intent(HomeActivity.this, ManageUsersActivity.class);
+            adminIntent.putExtra("USER_ID", userId);
+            startActivity(adminIntent);
+            finish();
+        }
     }
 
     private void setupNotificationUI() {
@@ -336,7 +342,6 @@ public class HomeActivity extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> { }).attach();
 
-        // Auto-scroll
         if (sliderItems.size() > 1) {
             viewPager.setCurrentItem(0, true);
             Handler handler = new Handler();

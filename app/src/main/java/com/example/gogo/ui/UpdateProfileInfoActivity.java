@@ -1,7 +1,6 @@
 package com.example.gogo.ui;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -12,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gogo.R;
 import com.example.gogo.adapters.UpdateProfileInfoAdapter;
-import com.example.gogo.respository.HealthRepository;
+import com.example.gogo.repository.HealthRepository;
 
 public class UpdateProfileInfoActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -49,7 +48,7 @@ public class UpdateProfileInfoActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         btnBack.setOnClickListener(v -> {
-            setResult(RESULT_CANCELED); // Đặt RESULT_CANCELED khi bấm nút Back
+            setResult(RESULT_CANCELED);
             finish();
         });
     }

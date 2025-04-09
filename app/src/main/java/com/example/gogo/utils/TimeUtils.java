@@ -8,7 +8,6 @@ public class TimeUtils {
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
-    // Tính giờ đi ngủ dựa trên giờ thức dậy và số giờ ngủ mong muốn
     public static String calculateSleepTime(String wakeUpTime, float sleepHours) {
         try {
             Calendar wakeUpCal = Calendar.getInstance();
@@ -21,7 +20,6 @@ public class TimeUtils {
         }
     }
 
-    // Tính số giờ ngủ
     public static float calculateSleepHours(String sleepTime, String wakeUpTime) {
         try {
             Calendar sleepCal = Calendar.getInstance();
@@ -30,7 +28,7 @@ public class TimeUtils {
             wakeUpCal.setTime(TIME_FORMAT.parse(wakeUpTime));
 
             long diffMillis = wakeUpCal.getTimeInMillis() - sleepCal.getTimeInMillis();
-            if (diffMillis < 0) diffMillis += 24 * 60 * 60 * 1000; // Qua ngày mới
+            if (diffMillis < 0) diffMillis += 24 * 60 * 60 * 1000;
             return diffMillis / (1000f * 60 * 60);
         } catch (Exception e) {
             return 0f;

@@ -13,7 +13,7 @@ public class BootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             Log.d(TAG, "Boot completed, restarting reminders");
 
-            Intent serviceIntent = new Intent(context, com.example.gogo.service.ReminderService.class);
+            Intent serviceIntent = new Intent(context, ReminderService.class);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 context.startForegroundService(serviceIntent);
             } else {

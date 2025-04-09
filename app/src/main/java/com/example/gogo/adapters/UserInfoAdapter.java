@@ -33,7 +33,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         this.context = context;
         this.user = user;
         this.dbHelper = new DatabaseHelper(context);
-        this.accountDAO = new AccountDAO(dbHelper); // Initialize accountDAO here
+        this.accountDAO = new AccountDAO(dbHelper);
     }
 
     @NonNull
@@ -46,7 +46,6 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Set up NumberPickers
         holder.numberPickerDay.setMinValue(1);
         holder.numberPickerDay.setMaxValue(31);
 
@@ -56,7 +55,6 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         holder.numberPickerYear.setMinValue(1900);
         holder.numberPickerYear.setMaxValue(2025);
 
-        // Set initial values from User object if available
         if (user != null) {
             if (user.getAge() > 0) {
                 holder.numberPickerYear.setValue(2025 - user.getAge());
@@ -83,7 +81,6 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
         }
 
         holder.buttonSave.setOnClickListener(v -> {
-            // Handle save action
             String gender = "";
             int selectedGenderId = holder.radioGroupGender.getCheckedRadioButtonId();
             if (selectedGenderId == R.id.radioButtonMale) {
@@ -94,7 +91,6 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
                 gender = "Khác";
             }
 
-            // Safely parse weight and height, default to 0 if empty
             float weight = 0;
             float height = 0;
             try {
@@ -109,19 +105,16 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
 
             int age = 2025 - holder.numberPickerYear.getValue();
 
-            // Update database
             boolean success = accountDAO.updateUserData(user.getGoogleId(), age, gender, height, weight);
 
             if (success) {
-                // Update user object
                 user.setGender(gender);
                 user.setWeight(weight);
                 user.setHeight(height);
                 user.setAge(age);
                 Toast.makeText(context, "Đã cập nhật thông tin", Toast.LENGTH_SHORT).show();
-                notifyDataSetChanged(); // Update UI
+                notifyDataSetChanged();
 
-                // Navigate to HomeActivity after successful save
                 Intent intent = new Intent(context, HomeActivity.class);
                 context.startActivity(intent);
                 if (context instanceof Activity) {
@@ -135,7 +128,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return 1; // Since we're only showing one form
+        return 1;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

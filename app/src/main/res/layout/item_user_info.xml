@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Date of Birth Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,7 +99,6 @@
             android:layout_marginBottom="20dp"
             android:background="#EEEEEE" />
 
-        <!-- Gender Selection Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -155,7 +153,6 @@
             android:layout_marginBottom="20dp"
             android:background="#EEEEEE" />
 
-        <!-- Weight Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -181,7 +178,6 @@
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Height Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -207,7 +203,6 @@
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Save Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSave"
             android:layout_width="match_parent"

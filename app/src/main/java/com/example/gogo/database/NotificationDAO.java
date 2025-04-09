@@ -14,28 +14,37 @@ public class NotificationDAO {
     }
 
     public void insertNotification(Notification notification) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("UserID", notification.getUser().getUserId());
-        values.put("Message", notification.getMessage());
-        values.put("NotifyTime", notification.getNotifyTime());
-        values.put("IsRead", notification.getIsRead());
-        values.put("Type", notification.getType());
-        db.insert("Notification", null, values);
-        db.close();
+        SQLiteDatabase db = dbHelper.getDatabase(true);
+        try {
+            ContentValues values = new ContentValues();
+            if (notification.getUser() != null) {
+                values.put("UserID", notification.getUser().getUserId());
+            } else {
+                values.putNull("UserID");
+            }
+            values.put("Message", notification.getMessage());
+            values.put("NotifyTime", notification.getNotifyTime());
+            values.put("IsRead", notification.getIsRead());
+            values.put("Type", notification.getType());
+            db.insert("Notification", null, values);
+        } finally {
+            db.close();
+        }
     }
 
     public long insertNotificationByUserId(Notification notification, int userId) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("UserID", notification.getUser() != null ? notification.getUser().getUserId() : userId);
-        values.put("Message", notification.getMessage());
-        values.put("NotifyTime", notification.getNotifyTime());
-        values.put("IsRead", notification.getIsRead());
-        values.put("Type", notification.getType());
-        long newRowId = db.insert("Notification", null, values);
-        db.close();
-        return newRowId;
+        SQLiteDatabase db = dbHelper.getDatabase(true);
+        try {
+            ContentValues values = new ContentValues();
+            values.put("UserID", notification.getUser() != null ? notification.getUser().getUserId() : userId);
+            values.put("Message", notification.getMessage());
+            values.put("NotifyTime", notification.getNotifyTime());
+            values.put("IsRead", notification.getIsRead());
+            values.put("Type", notification.getType());
+            return db.insert("Notification", null, values);
+        } finally {
+            db.close();
+        }
     }
 
     public synchronized Cursor getUserNotifications(int userId) {

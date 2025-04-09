@@ -52,7 +52,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-    <!-- Card View bọc RecyclerView giống trong ảnh -->
     <androidx.cardview.widget.CardView
         android:id="@+id/optionsCardView"
         android:layout_width="0dp"

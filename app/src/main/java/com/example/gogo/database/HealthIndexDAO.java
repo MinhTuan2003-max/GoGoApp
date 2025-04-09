@@ -31,9 +31,8 @@ public class HealthIndexDAO {
         try {
             String query = "SELECT * FROM HealthIndex WHERE UserID = ? ORDER BY RecordedAt DESC LIMIT 1";
             return db.rawQuery(query, new String[]{String.valueOf(userId)});
-            // Caller should close the Cursor
         } finally {
-            db.close(); // Close the database after query
+            db.close();
         }
     }
 

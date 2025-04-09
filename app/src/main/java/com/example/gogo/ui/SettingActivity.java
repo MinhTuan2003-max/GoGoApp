@@ -119,23 +119,23 @@ public class SettingActivity extends AppCompatActivity {
 
         adapter = new SettingOptionAdapter(options, option -> {
             switch (option.getId()) {
-                case 1: // Compare
+                case 1:
                     Intent compareIntent = new Intent(SettingActivity.this, WeightGoalSelectionActivity.class);
                     startActivity(compareIntent);
                     break;
-                case 2: // Body Fat
+                case 2:
                     Intent bodyFatIntent = new Intent(SettingActivity.this, BodyFatActivity.class);
                     startActivity(bodyFatIntent);
                     break;
-                case 3: // Notifications
+                case 3:
                     Intent notificationIntent = new Intent(SettingActivity.this, ReminderSettingsActivity.class);
                     startActivity(notificationIntent);
                     break;
-                case 4: // Terms
+                case 4:
                     Intent termsIntent = new Intent(SettingActivity.this, TermsActivity.class);
                     startActivity(termsIntent);
                     break;
-                case 5: // About Us
+                case 5:
                     Intent intent = new Intent(SettingActivity.this, AboutUsActivity.class);
                     startActivity(intent);
                     break;
@@ -159,13 +159,11 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (itemId == R.id.nav_settings) {
-                // Đã ở SettingActivity, không làm gì
                 return true;
             }
             return false;
         });
 
-        // Đánh dấu mục hiện tại
         bottomNavigationView.setSelectedItemId(R.id.nav_settings);
     }
 

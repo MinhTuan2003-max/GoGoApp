@@ -2,12 +2,14 @@ package com.example.gogo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TimePicker;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.gogo.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class WakeUpInputActivity extends AppCompatActivity {
     private TimePicker timePicker;
@@ -26,6 +28,8 @@ public class WakeUpInputActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         btnSubmit.setOnClickListener(v -> showSleepSuggestions());
+
+        setupBottomNavigation();
     }
 
     private void showSleepSuggestions() {
@@ -36,5 +40,26 @@ public class WakeUpInputActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SleepSuggestionActivity.class);
         intent.putExtra("wake_up_time", wakeUpTime);
         startActivity(intent);
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                startActivity(new Intent(WakeUpInputActivity.this, HomeActivity.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(WakeUpInputActivity.this, ViewProfileActivity.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_settings) {
+                startActivity(new Intent(WakeUpInputActivity.this, SettingActivity.class));
+                finish();
+                return true;
+            }
+            return false;
+        });
     }
 }

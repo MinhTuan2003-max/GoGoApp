@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_add_new"
+        android:icon="@drawable/ic_add"
+        android:title="Thêm mới"/>
+    <item
+        android:id="@+id/menu_stats"
+        android:icon="@drawable/ic_stats"
+        android:title="Thống kê"/>
+</menu>

@@ -47,7 +47,6 @@
             android:background="@color/divider_color"
             app:layout_constraintTop_toBottomOf="@id/textBodyMeasurementsTitle" />
 
-        <!-- Measurement cards -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardHeight"
             android:layout_width="0dp"

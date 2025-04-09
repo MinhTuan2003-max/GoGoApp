@@ -1,11 +1,7 @@
 package com.example.gogo.ui;
 
-import android.os.Bundle;
-import android.widget.Button;
-import androidx.appcompat.app.AppCompatActivity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,7 +36,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
     private static final String TAG = "GoogleSignIn";
     private static final String CHANNEL_ID = "GoGoChannel";
     private GoogleSignInClient mGoogleSignInClient;
@@ -51,16 +46,11 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                Log.d(TAG, "Sign-in result received: code=" + result.getResultCode() + ", data=" + result.getData());
-                Intent data = result.getData();
-
-                if (result.getResultCode() == RESULT_OK && data != null) {
-                    Log.d(TAG, "Sign-in successful, processing result");
-                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
                     handleSignInResult(task);
                 } else {
-                    Log.e(TAG, "Sign-in was canceled or failed: code=" + result.getResultCode());
-                    Toast.makeText(MainActivity.this, "Đăng nhập bị hủy", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Đăng nhập bị hủy", Toast.LENGTH_SHORT).show();
                 }
             }
     );
@@ -97,28 +87,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "GoGo Notifications",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "GoGo Notifications", NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription("Thông báo nhắc nhở của ứng dụng GoGo");
             channel.enableVibration(true);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+            getSystemService(NotificationManager.class).createNotificationChannel(channel);
         }
     }
 
     private void startReminderService() {
-        Log.d(TAG, "Starting reminder service");
         Intent serviceIntent = new Intent(this, ReminderService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
         } else {
             startService(serviceIntent);
         }
-
-        // Thiết lập mặc định và lên lịch các thông báo
         ReminderManager.setupAllReminders(this);
     }
 
@@ -126,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         GoogleApiAvailability googleApi = GoogleApiAvailability.getInstance();
         int resultCode = googleApi.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
-            Log.e(TAG, "Google Play Services unavailable: " + resultCode);
             if (googleApi.isUserResolvableError(resultCode)) {
                 googleApi.getErrorDialog(this, resultCode, 9000).show();
             } else {
@@ -134,65 +115,39 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         }
-        Log.d(TAG, "Google Play Services is available");
         return true;
     }
 
     private void checkPreviousSignIn() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
-            Log.d(TAG, "Previous sign-in detected: " + account.getEmail());
-            navigateToHomeActivity(account);
-        } else {
-            Log.d(TAG, "No previous sign-in detected");
+            navigateToNextActivity(account);
         }
     }
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        Log.d(TAG, "Launching sign-in intent");
         signInLauncher.launch(signInIntent);
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Log.d(TAG, "Sign-in successful, account: " + (account != null ? account.getEmail() : "null"));
-
             if (account != null) {
                 saveUserToDatabase(account);
             } else {
-                Log.e(TAG, "Account is null after successful sign-in");
-                Toast.makeText(MainActivity.this, "Đăng nhập không thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Đăng nhập không thành công", Toast.LENGTH_SHORT).show();
             }
         } catch (ApiException e) {
-            Log.w(TAG, "Sign-in failed: code=" + e.getStatusCode() + ", message=" + e.getMessage());
-            String errorMessage;
-            switch (e.getStatusCode()) {
-                case 12501:
-                    errorMessage = "Đăng nhập bị hủy bởi người dùng";
-                    break;
-                case 12500:
-                    errorMessage = "Lỗi đăng nhập không xác định";
-                    break;
-                case 10:
-                    errorMessage = "Lỗi cấu hình nhà phát triển (kiểm tra Google Cloud Console)";
-                    break;
-                default:
-                    errorMessage = "Đăng nhập thất bại: " + e.getStatusMessage();
-            }
-            Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.e(TAG, "Unexpected error during sign-in: ", e);
-            Toast.makeText(MainActivity.this, "Lỗi không xác định khi đăng nhập", Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            Toast.makeText(this, "Đăng nhập thất bại: " + e.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void saveUserToDatabase(GoogleSignInAccount account) {
         String googleId = account.getId();
-        Log.d(TAG, "Attempting to save user with GoogleID: " + googleId);
-
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String email = account.getEmail();
+        NotificationManager manager = getSystemService(NotificationManager.class);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle("GoGo")
@@ -202,73 +157,66 @@ public class MainActivity extends AppCompatActivity {
         String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
 
         if (accountDAO.isUserExists(googleId)) {
-            Log.d(TAG, "User already exists with GoogleID: " + googleId);
-            Toast.makeText(this, "Chào mừng trở lại", Toast.LENGTH_SHORT).show();
             User user = accountDAO.getUserByGoogleId(googleId);
             if (user != null) {
+                Toast.makeText(this, "Chào mừng trở lại", Toast.LENGTH_SHORT).show();
                 Notification welcomeBackNotification = new Notification(
-                        user,
-                        "Chào mừng " + account.getDisplayName() + " trở lại!",
-                        currentTime,
-                        0,
-                        0
-                );
+                        user.getUserId(), user, "Chào mừng " + account.getDisplayName() + " trở lại!", currentTime, 0, 0);
                 notificationDAO.insertNotification(welcomeBackNotification);
                 builder.setContentText("Chào mừng " + account.getDisplayName() + " trở lại!");
                 manager.notify((int) System.currentTimeMillis(), builder.build());
+                navigateToNextActivity(account);
+            } else {
+                Log.e(TAG, "User exists but could not be retrieved from database for GoogleID: " + googleId);
+                Toast.makeText(this, "Lỗi tải thông tin người dùng", Toast.LENGTH_SHORT).show();
             }
-            navigateToHomeActivity(account);
         } else {
             boolean success = accountDAO.insertUser(
-                    googleId,
-                    account.getDisplayName(),
-                    account.getEmail(),
-                    account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "default_url"
-            );
-
+                    googleId, account.getDisplayName(), email,
+                    account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "default_url");
             if (success) {
-                int userId = accountDAO.getUserIdByGoogleId(googleId);
-                Log.d(TAG, "User saved successfully, UserID: " + userId);
                 User user = accountDAO.getUserByGoogleId(googleId);
                 if (user != null) {
+                    int userId = user.getUserId();
                     Notification joinNotification = new Notification(
-                            user,
-                            "Chào mừng " + account.getDisplayName() + " tham gia GoGo!",
-                            currentTime,
-                            0,
-                            0
-                    );
+                            userId, user, "Chào mừng " + account.getDisplayName() + " tham gia GoGo!", currentTime, 0, 0);
                     notificationDAO.insertNotification(joinNotification);
+                    builder.setContentText("Chào mừng " + account.getDisplayName() + " tham gia GoGo!");
+                    manager.notify((int) System.currentTimeMillis(), builder.build());
 
                     Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
                     intent.putExtra("USER_ID", userId);
                     intent.putExtra("GOOGLE_ID", googleId);
                     startActivity(intent);
                     finish();
+                } else {
+                    Log.e(TAG, "Failed to retrieve newly inserted user with GoogleID: " + googleId);
+                    Toast.makeText(this, "Lỗi tải thông tin người dùng sau khi đăng ký", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.e(TAG, "Failed to save user to database");
+                Log.e(TAG, "Failed to insert user with GoogleID: " + googleId);
                 Toast.makeText(this, "Lỗi lưu thông tin người dùng", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void navigateToHomeActivity(GoogleSignInAccount account) {
-        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-        if (account != null) {
-            int userId = accountDAO.getUserIdByGoogleId(account.getId());
-            intent.putExtra("USER_ID", userId);
+    private void navigateToNextActivity(GoogleSignInAccount account) {
+        User user = accountDAO.getUserByGoogleId(account.getId());
+        if (user != null) {
+            Intent intent;
+            if (user.isAdmin()) {
+                intent = new Intent(this, ManageUsersActivity.class);
+            } else {
+                intent = new Intent(this, HomeActivity.class);
+            }
+            intent.putExtra("USER_ID", user.getUserId());
             intent.putExtra("GOOGLE_ID", account.getId());
-        }
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (databaseHelper != null) {
-            databaseHelper.close();
+            intent.putExtra("IS_ADMIN", user.isAdmin());
+            startActivity(intent);
+            finish();
+        } else {
+            Log.e(TAG, "Failed to retrieve user for navigation with GoogleID: " + account.getId());
+            Toast.makeText(this, "Lỗi tải thông tin người dùng", Toast.LENGTH_SHORT).show();
         }
     }
 }

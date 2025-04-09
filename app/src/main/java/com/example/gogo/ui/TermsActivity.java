@@ -28,23 +28,18 @@ public class TermsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terms);
 
-        // Ánh xạ các thành phần giao diện
         recyclerView = findViewById(R.id.recyclerView);
         btnBack = findViewById(R.id.btnBack);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        // Thiết lập sự kiện cho nút quay lại
         btnBack.setOnClickListener(v -> finish());
 
-        // Thiết lập RecyclerView
         setupRecyclerView();
 
-        // Thiết lập BottomNavigationView
         setupBottomNavigation();
     }
 
     private void setupRecyclerView() {
-        // Tạo danh sách các điều khoản bằng tiếng Việt
         List<TermItem> items = new ArrayList<>();
         items.add(new TermItem("1. Chấp nhận điều khoản",
                 "Bằng việc sử dụng ứng dụng GoGo, bạn đồng ý tuân thủ các điều khoản và điều kiện được liệt kê dưới đây."));
@@ -57,7 +52,6 @@ public class TermsActivity extends AppCompatActivity {
         items.add(new TermItem("5. Liên hệ hỗ trợ",
                 "Nếu bạn có thắc mắc về điều khoản, vui lòng liên hệ với chúng tôi qua email: support@gogo.com."));
 
-        // Thiết lập adapter
         adapter = new TermAdapter(items);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);

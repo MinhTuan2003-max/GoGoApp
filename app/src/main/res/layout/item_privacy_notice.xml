@@ -12,5 +12,4 @@
     app:cardElevation="2dp"
     app:strokeColor="@color/privacy_stroke"
     app:strokeWidth="1dp">
-    <!-- Privacy content would go here -->
 </com.google.android.material.card.MaterialCardView>

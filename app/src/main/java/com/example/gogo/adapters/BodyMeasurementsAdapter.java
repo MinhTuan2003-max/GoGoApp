@@ -9,14 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gogo.R;
-import com.example.gogo.respository.HealthRepository;
+import com.example.gogo.repository.HealthRepository;
 
 public class BodyMeasurementsAdapter extends RecyclerView.Adapter<BodyMeasurementsAdapter.BodyMeasurementsViewHolder> {
-    private Context context; // Thêm context
+    private Context context;
     private HealthRepository healthRepository;
     private String googleId;
 
-    // Constructor nhận context
     public BodyMeasurementsAdapter(Context context, HealthRepository healthRepository, String googleId) {
         this.context = context;
         this.healthRepository = healthRepository;
@@ -37,21 +36,18 @@ public class BodyMeasurementsAdapter extends RecyclerView.Adapter<BodyMeasuremen
 
     @Override
     public int getItemCount() {
-        return 1; // Chỉ có 1 item
+        return 1;
     }
 
     class BodyMeasurementsViewHolder extends RecyclerView.ViewHolder {
-        // Các view đã khai báo
-        Context context; // Thêm context
+        Context context;
 
         BodyMeasurementsViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.context = itemView.getContext(); // Lấy context từ itemView
-            // Khởi tạo các view
+            this.context = itemView.getContext();
         }
 
         void bind() {
-            // Sử dụng context trong bind()
         }
     }
 }

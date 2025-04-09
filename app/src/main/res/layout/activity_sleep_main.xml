@@ -45,7 +45,7 @@
         android:id="@+id/welcomeDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Join us in improving your health every day."
+        android:text="Hãy cùng chúng tôi cải thiện sức khỏe của bạn mỗi ngày."
         android:textColor="#B0BEC5"
         android:textSize="14sp"
         android:textAlignment="center"
@@ -55,12 +55,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Nút "Get Started" (để nhập giờ thức dậy) -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/getStartedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Get Started"
+        android:text="Tính toán thời gian thức dậy"
         android:textColor="@color/text_get_started"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -73,12 +72,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Nút mới để nhập lịch sử giấc ngủ -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSleepInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Nhập lịch sử giấc ngủ"
+        android:text="Lịch sử giấc ngủ"
         android:textColor="@color/text_get_started"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -90,5 +88,19 @@
         app:layout_constraintTop_toBottomOf="@+id/getStartedButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        android:background="@drawable/tab_background_selector"
+        app:srcCompat="@drawable/ic_back"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

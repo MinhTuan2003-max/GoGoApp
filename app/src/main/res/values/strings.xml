@@ -1,6 +1,5 @@
 <resources>
     <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
@@ -29,6 +28,12 @@
         <item>4 giờ</item>
     </string-array>
 
+    <string name="breakfast_prompt">Chọn bữa sáng</string>
+    <string name="lunch_prompt">Chọn bữa trưa</string>
+    <string name="dinner_prompt">Chọn bữa tối</string>
+    <string name="food_prompt">Chọn món ăn</string>
+
+
     <string name="app_name">Gogo</string>
     <string name="app_name_2">Gogo</string>
     <string name="welcome_to_gogo">Your Health, Our Priority</string>
@@ -36,7 +41,10 @@
     <string name="sign_in_with_facebook">Login with Facebook</string>
     <string name="forgot_password">Quên mật khẩu?</string>
     <string name="signup">Đăng ký</string>
+
     <string name="app_logo">Logo ứng dụng</string>
+    <string name="exercise_list_title">Danh sách bài tập</string>
+    <string name="add_exercise">Thêm bài tập</string>
 
     <string name="welcome_message">Xin chào, %1$s!</string>
     <string name="sign_in_failed">Đăng nhập thất bại</string>

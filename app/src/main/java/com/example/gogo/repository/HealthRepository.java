@@ -1,13 +1,11 @@
-package com.example.gogo.respository;
+package com.example.gogo.repository;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.util.Log;
 
 import com.example.gogo.database.AccountDAO;
 import com.example.gogo.database.DatabaseHelper;
 import com.example.gogo.database.HealthIndexDAO;
-import com.example.gogo.models.HealthData;
 import com.example.gogo.models.User;
 import com.example.gogo.utils.HealthUtils;
 

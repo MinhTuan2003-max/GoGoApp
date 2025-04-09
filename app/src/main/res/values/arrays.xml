@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="exercise_categories">
+        <item>Cardio</item>
+        <item>Strength</item>
+        <item>Flexibility</item>
+    </array>
+    <array name="difficulty_levels">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </array>
+</resources>

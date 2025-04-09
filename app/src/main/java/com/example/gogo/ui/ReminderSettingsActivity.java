@@ -2,8 +2,6 @@ package com.example.gogo.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -53,7 +51,6 @@ public class ReminderSettingsActivity extends AppCompatActivity {
         dinnerTimePicker = findViewById(R.id.timePicker_dinner);
         sleepTimePicker = findViewById(R.id.timePicker_sleep);
 
-        // Thiết lập 24h format cho TimePicker
         breakfastTimePicker.setIs24HourView(true);
         lunchTimePicker.setIs24HourView(true);
         dinnerTimePicker.setIs24HourView(true);
@@ -93,12 +90,10 @@ public class ReminderSettingsActivity extends AppCompatActivity {
         }
         waterIntervalSpinner.setSelection(spinnerPosition);
 
-        // Thiết lập thời gian các bữa ăn
         setTimePickerFromString(breakfastTimePicker, prefs.getString(ReminderManager.KEY_BREAKFAST_TIME, "07:00"));
         setTimePickerFromString(lunchTimePicker, prefs.getString(ReminderManager.KEY_LUNCH_TIME, "12:00"));
         setTimePickerFromString(dinnerTimePicker, prefs.getString(ReminderManager.KEY_DINNER_TIME, "18:00"));
 
-        // Thiết lập thời gian ngủ
         setTimePickerFromString(sleepTimePicker, prefs.getString(ReminderManager.KEY_SLEEP_TIME, "22:00"));
     }
 
@@ -120,7 +115,6 @@ public class ReminderSettingsActivity extends AppCompatActivity {
     private void setupListeners() {
         saveButton.setOnClickListener(v -> saveSettings());
 
-        // Xử lý enable/disable các control dựa trên trạng thái switch
         waterSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
                 waterIntervalSpinner.setEnabled(isChecked));
 
@@ -138,12 +132,10 @@ public class ReminderSettingsActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        // Lưu trạng thái bật/tắt
         editor.putBoolean(ReminderManager.KEY_WATER_REMINDER_ENABLED, waterSwitch.isChecked());
         editor.putBoolean(ReminderManager.KEY_MEAL_REMINDER_ENABLED, mealSwitch.isChecked());
         editor.putBoolean(ReminderManager.KEY_SLEEP_REMINDER_ENABLED, sleepSwitch.isChecked());
 
-        // Lưu khoảng thời gian uống nước
         int waterIntervalMinutes;
         switch (waterIntervalSpinner.getSelectedItemPosition()) {
             case 0:
@@ -169,18 +161,14 @@ public class ReminderSettingsActivity extends AppCompatActivity {
         }
         editor.putInt(ReminderManager.KEY_WATER_INTERVAL, waterIntervalMinutes);
 
-        // Lưu thời gian các bữa ăn
         editor.putString(ReminderManager.KEY_BREAKFAST_TIME, getTimeStringFromTimePicker(breakfastTimePicker));
         editor.putString(ReminderManager.KEY_LUNCH_TIME, getTimeStringFromTimePicker(lunchTimePicker));
         editor.putString(ReminderManager.KEY_DINNER_TIME, getTimeStringFromTimePicker(dinnerTimePicker));
 
-        // Lưu thời gian ngủ
         editor.putString(ReminderManager.KEY_SLEEP_TIME, getTimeStringFromTimePicker(sleepTimePicker));
 
-        // Lưu tất cả thay đổi
         editor.apply();
 
-        // Cập nhật lên lịch thông báo
         if (waterSwitch.isChecked()) {
             ReminderManager.scheduleWaterReminders(this);
         } else {
